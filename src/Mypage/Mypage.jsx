@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-//import './Mypage.css'; // 필요한 스타일 적용
+import './Mypage.css'; // 필요한 스타일 적용
 
 function MypageMemberInfo() {
   const navigate = useNavigate();

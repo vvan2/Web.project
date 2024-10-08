@@ -30,19 +30,26 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 섹션 그림자 */
 }
 
-textarea {
-  width: 100%; /* 텍스트 영역이 섹션의 너비를 채우도록 설정 */
-  margin-top: 20px; /* 텍스트 영역의 상단 여백을 20px로 설정 */
+.message-input-section,
+.preview-section textarea{
+    width: 93%; /* 텍스트 영역이 섹션의 너비를 채우도록 설정 */
+  
 }
+
+ textarea {
+  width: 10%; /* 텍스트 영역이 섹션의 너비를 채우도록 설정 */
+  margin-top: 20px; /* 텍스트 영역의 상단 여백을 20px로 설정 */
+} 
 
 
 .message-input input {
   margin-top: 20px;
   height: 20px;
-  width: 100%;
+  width: 96%;
 }
 .message-input textarea{
   height: 200px;
+  width: 93%;
 }
 .image-gif-upload input,
 .send-section input {
