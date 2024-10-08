@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-//import './Mypage.css'; // 필요한 스타일 적용
+import './Mypage.css'; 
 
 function MypageMemberInfo() {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({
-    id: '',
-    name: '',
-    phone: '',
-    email: '',
-    address: ''
+    id: 'id1234',
+    name: '홍길동',
+    phone: '010-1111-2222',
+    email: 'email@gmail.com',
+    address: '서울'
   });
 
   // 서버에서 사용자 정보 가져오기
@@ -53,13 +53,14 @@ function MypageMemberInfo() {
       <div className="info-section">
         <div className="info-item">
           <div>아이디</div>
-          <div>{userInfo.id}</div>
+          <div style={{ marginRight: '100px' }}>{userInfo.id}</div>
+          <div></div>
         </div>
 
         <div className="info-item">
           <div>이름</div>
-          <div>{userInfo.name}</div>
-          <button onClick={() => navigate('/mypage/change-name')}>이름 변경</button>
+          <div style={{ marginRight: '80px' }}>{userInfo.name}</div>
+          <div></div>
         </div>
 
         <div className="info-item">
