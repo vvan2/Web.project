@@ -42,9 +42,9 @@ function MypageMemberInfo() {
 
       {/* 메뉴 탭 */}
       <div className="tab-menu">
-        <span className="active" onClick={() => navigate('/Mypage')}>회원정보변경</span>
-        <span onClick={() => navigate('/Mypage_pw')}>비밀번호변경</span>
-        <span onClick={() => navigate('/Mypage_letter')}>발송내역</span>
+        <span onClick={() => navigate('/Mypage')}>회원정보변경</span>
+        <span onClick={() => navigate('/Mypage_pw')}>비밀번호변경</span> {/* 여기에 active 적용 */}
+        <span className="active" onClick={() => navigate('/Mypage_letter')}>발송내역</span>
         <span onClick={() => navigate('/Mypage_storage')}>보관함</span>
         <span onClick={() => navigate('/Mypage_withdraw')}>회원 탈퇴</span>
       </div>

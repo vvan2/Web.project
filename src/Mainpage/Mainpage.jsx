@@ -63,7 +63,7 @@ function MainPage() {
         </div>
             <input
               type="text"
-              placeholder="제목을 입력해주세요"
+              placeholder="제목을 입력해주세요 (발송 관리용)"
               value={messageTitle}
               onChange={(e) => setMessageTitle(e.target.value)}
             />
