@@ -1,8 +1,7 @@
 /* Mypage 전체 컨테이너 */
 .mypage-container {
-    width: 100%;
-    padding: 20px;
-    box-sizing: border-box;
+    background-color: #f0f0f0; /* 상단바 배경 색상 */
+    padding: 10px; /* 상단바의 패딩 */
   }
   
   /* 상단 헤더 */
@@ -62,17 +61,22 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
+    background-color: #fff; /* 섹션 배경 색상 */
+    align-items: center; /* 모든 항목을 중앙 정렬 */
   }
   
   .info-item {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px;
-    border-bottom: 1px solid #eee;
+    justify-content: space-between; /* 아이템과 버튼 간의 공간을 생성 */
+    width: 100%; /* 아이템의 너비를 100%로 설정 */
+    max-width: 600px; /* 최대 너비 제한 */
+    padding: 10px; /* 패딩 추가 */
+    align-items: center; /* 세로 중앙 정렬 */
+    border-bottom: 1px solid #eee; /* 하단 테두리 */
   }
   
   .info-item div {
+    text-align: center;
     font-size: 18px;
     font-weight: bold;
   }

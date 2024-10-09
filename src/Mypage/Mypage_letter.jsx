@@ -12,6 +12,8 @@ function MypageMemberInfo() {
     address: '서울'
   });
 
+  const [messageHistory, setMessageHistory] = useState([]);
+
   // 서버에서 사용자 정보 가져오기
   useEffect(() => {
     fetch('/api/userinfo') // 사용자 정보를 제공하는 API 엔드포인트
@@ -26,6 +28,14 @@ function MypageMemberInfo() {
         });
       })
       .catch((error) => console.error('Error fetching user info:', error));
+    
+    // 발송 내역 가져오기
+    fetch('/api/message-history') // 발송 내역을 제공하는 API 엔드포인트
+      .then((response) => response.json())
+      .then((data) => {
+        setMessageHistory(data); // 서버에서 가져온 발송 내역 저장
+      })
+      .catch((error) => console.error('Error fetching message history:', error));
   }, []);
 
   return (
@@ -42,44 +52,39 @@ function MypageMemberInfo() {
 
       {/* 메뉴 탭 */}
       <div className="tab-menu">
-        <span className="active" onClick={() => navigate('/Mypage')}>회원정보변경</span>
+        <span onClick={() => navigate('/Mypage')}>회원정보변경</span>
         <span onClick={() => navigate('/Mypage_pw')}>비밀번호변경</span>
-        <span onClick={() => navigate('/Mypage_letter')}>발송내역</span>
+        <span className="active" onClick={() => navigate('/Mypage_letter')}>발송내역</span>
         <span onClick={() => navigate('/Mypage_storage')}>보관함</span>
         <span onClick={() => navigate('/Mypage_withdraw')}>회원 탈퇴</span>
       </div>
 
-      {/* 회원정보 표시 */}
+      {/* 문자 발송 내역 */}
       <div className="info-section">
-        <div className="info-item">
-          <div>아이디</div>
-          <div style={{ marginRight: '100px' }}>{userInfo.id}</div>
-          <div></div>
-        </div>
-
-        <div className="info-item">
-          <div>이름</div>
-          <div style={{ marginRight: '80px' }}>{userInfo.name}</div>
-          <div></div>
-        </div>
-
-        <div className="info-item">
-          <div>전화번호</div>
-          <div>{userInfo.phone}</div>
-          <button onClick={() => navigate('/mypage/change-phone')}>전화번호 변경</button>
-        </div>
-
-        <div className="info-item">
-          <div>이메일</div>
-          <div>{userInfo.email}</div>
-          <button onClick={() => navigate('/mypage/change-email')}>이메일 변경</button>
-        </div>
-
-        <div className="info-item">
-          <div>주소</div>
-          <div>{userInfo.address}</div>
-          <button onClick={() => navigate('/mypage/change-address')}>주소 변경</button>
-        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>발송일</th>
+              <th>문자 종류</th>
+              <th>발송건수</th>
+              <th>문자 제목</th>
+              <th>내용 보기</th>
+            </tr>
+          </thead>
+          <tbody>
+            {messageHistory.map((message, index) => (
+              <tr key={index}>
+                <td>{message.date}</td>
+                <td>{message.type}</td>
+                <td>{message.count}</td>
+                <td>{message.title}</td>
+                <td>
+                  <button onClick={() => alert(message.content)}>문자 내용 보기</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
