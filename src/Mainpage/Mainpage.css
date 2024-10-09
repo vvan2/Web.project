@@ -58,6 +58,9 @@
   border: 1px solid #ccc; /* 테두리 스타일 추가 */
   border-radius: 5px; /* 모서리를 둥글게 */
 }
+.send-section textarea {
+    width: 93%;
+}
 
 button {
   margin-top: 10px; /* 버튼과 위 요소 간의 간격 */
