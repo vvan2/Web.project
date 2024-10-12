@@ -93,7 +93,7 @@ function MypageMemberInfo() {
 
       {/* 비밀번호 변경 폼 */}
       <div className="info-section">
-        <div className="info-item">
+        <div className="info-items">
           <div>기존 비밀번호</div>
           <input
             type="password"
@@ -104,7 +104,7 @@ function MypageMemberInfo() {
           />
         </div>
 
-        <div className="info-item">
+        <div className="info-items">
           <div>새로운 비밀번호</div>
           <input
             type="password"
@@ -115,7 +115,7 @@ function MypageMemberInfo() {
           />
         </div>
 
-        <div className="info-item">
+        <div className="info-items">
           <div>새로운 비밀번호 확인</div>
           <input
             type="password"
