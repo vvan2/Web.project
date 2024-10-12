@@ -200,7 +200,7 @@ function MainPage() {
           <button onClick={() => navigate('/')}>BluePrint</button>
           <div className="user-options">
             <span>회원이름</span>
-            <span>로그아웃</span>
+            <span onClick={() => navigate('/Login')}>로그인</span>
             <span onClick={() => navigate('/Mypage')}>마이페이지</span>
           </div>
         </div>
