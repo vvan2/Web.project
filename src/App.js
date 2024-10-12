@@ -5,6 +5,8 @@ import MypagePw from './Mypage/Mypage_pw';
 import MypageLetter from './Mypage/Mypage_letter';
 import MypageStorage from './Mypage/Mypage_storage';
 import MypageWithdraw from './Mypage/Mypage_withdraw';
+import Login from './Login/Login';
+import Join from './Join/Join';
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
         <Route path="/Mypage_letter" element={<MypageLetter />} />
         <Route path="/Mypage_storage" element={<MypageStorage />} />
         <Route path="/Mypage_withdraw" element={<MypageWithdraw />} />
+        <Route path="/Login" element={<Login />} />
+        <Route path="/Join" element={<Join />} />
       </Routes>
     </Router>
   );
