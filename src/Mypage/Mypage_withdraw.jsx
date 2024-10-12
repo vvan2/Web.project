@@ -92,7 +92,7 @@ function MypageMemberInfo() {
 
       {/* 회원 탈퇴 폼 */}
       <div className="info-section">
-        <div className="info-item">
+        <div className="info-items">
           <div>비밀번호</div>
           <input
             type="password"
@@ -103,7 +103,7 @@ function MypageMemberInfo() {
           />
         </div>
 
-        <div className="info-item">
+        <div className="info-items">
           <div>비밀번호 확인</div>
           <input
             type="password"
