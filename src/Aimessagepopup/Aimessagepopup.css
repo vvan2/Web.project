@@ -1,130 +1,177 @@
-/* 팝업 컨테이너 */
 .popup-container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80%;
-    max-width: 800px;
-    background-color: white;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-  }
-  
-  /* 팝업 헤더 */
-  .popup-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 10px;
-  }
-  
-  .popup-header span {
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  
-  .popup-header span:hover {
-    color: #007bff;
-  }
-  
-  /* 탭 메뉴 스타일 */
-  .popup-header .active {
-    color: black;
-    font-weight: bold;
-    border-bottom: 2px solid black;
-  }
-  
-  .popup-header span + span {
-    margin-left: 20px;
-  }
-  
-  /* 팝업 내용 */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%; /* 팝업 너비를 넓게 수정 */
+  max-width: 1000px; /* 최대 너비 */
+  background-color: white;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+/* 팝업 헤더 */
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 10px;
+}
+
+.popup-header span {
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 10px 20px;
+  transition: color 0.3s ease;
+}
+
+.popup-header span:hover {
+  color: #007bff;
+}
+
+/* 활성화된 탭 스타일 */
+.popup-header .active {
+  color: black;
+  font-weight: bold;
+  border-bottom: 2px solid black;
+}
+
+.popup-header span + span {
+  margin-left: 20px;
+}
+
+/* 팝업 내용 */
+.popup-content {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px; /* 더 넓은 간격 추가 */
+}
+
+/* 왼쪽 영역 (문자 내용 입력 및 키워드 입력) */
+.left-section {
+  flex: 1.5; /* 왼쪽 섹션이 오른쪽보다 조금 더 넓음 */
+}
+
+.input-section {
+  margin-bottom: 20px;
+}
+
+.input-section label {
+  font-size: 16px;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 10px;
+}
+
+textarea, select, input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f8f8f8;
+  font-size: 14px;
+  resize: none;
+  margin-bottom: 15px; /* 아래 여백 추가 */
+}
+
+textarea {
+  height: 80px;
+}
+
+/* 조직, 분위기, 상황 등의 select 박스 간격 및 스타일 */
+select {
+  display: block;
+  margin-bottom: 10px;
+  padding: 8px;
+  border-radius: 5px;
+}
+
+/* 오른쪽 영역 (이미지 생성 결과 및 선택) */
+.right-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2열 그리드로 구성 */
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.image-grid img {
+  width: 100%;
+  height: auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.selected {
+  border: 3px solid #007bff; /* 선택된 이미지 강조 */
+}
+
+button {
+  padding: 10px 20px;
+  margin-right: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[disabled] {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+button + button {
+  margin-left: 10px;
+}
+
+button:hover:not([disabled]) {
+  background-color: #0056b3;
+}
+
+/* 이미지 선택 후 버튼 스타일 */
+button.disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+button.active {
+  background-color: #0056b3;
+}
+
+/* 반응형 디자인을 위한 조정 */
+@media (max-width: 768px) {
   .popup-content {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
+    flex-direction: column;
   }
-  
-  /* 발송 목적 및 내용, 주요 키워드 입력 영역 */
-  .input-section {
-    flex: 1;
-  }
-  
-  .input-section label {
-    font-size: 16px;
-    font-weight: bold;
-    display: block;
-    margin-bottom: 10px;
-  }
-  
+
   textarea {
+    height: 60px;
+  }
+
+  .right-section, .left-section {
     width: 100%;
-    height: 120px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f8f8f8;
-    font-size: 14px;
-    resize: none;
-    margin-bottom: 20px;
   }
-  
-  /* 생성 결과 영역 */
-  .result-section {
-    flex: 1;
+
+  .image-section {
+    width: 100%;
   }
-  
-  .result-section label {
-    font-size: 16px;
-    font-weight: bold;
-    display: block;
-    margin-bottom: 10px;
+
+  .image-grid {
+    grid-template-columns: 1fr; /* 작은 화면에서는 1열로 변경 */
   }
-  
-  textarea[readonly] {
-    background-color: #f0f0f0;
-  }
-  
-  /* 버튼 스타일 */
-  button {
-    padding: 10px 20px;
-    margin-right: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  button[disabled] {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
-  
-  button + button {
-    margin-left: 10px;
-  }
-  
-  /* 하단 버튼 영역 */
-  .popup-footer {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
-  }
-  
-  .popup-footer button {
-    background-color: #555;
-    color: white;
-  }
-  
-  .popup-footer button:hover {
-    background-color: #007bff;
-  }
-  
+}
