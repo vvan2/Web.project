@@ -13,16 +13,12 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
   const [selectedImage, setSelectedImage] = useState(null);
   const [generatedMessage, setGeneratedMessage] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [activeTab, setActiveTab] = useState('text');
 
-  // 탭 상태 관리 (문자 생성 or 이미지 생성)
-  const [activeTab, setActiveTab] = useState('text'); // 기본값을 'text'로 설정
-
-  // 이미지 파일 업로드 핸들러
   const handleFileChange = (e) => {
     setReferenceImage(e.target.files[0]);
   };
 
-  // 문자 생성 함수 (발송목적 및 내용과 주요 키워드를 합침)
   const handleGenerateMessage = () => {
     if (!purposeContent || !keywords) {
       alert('발송목적 및 주요 키워드를 입력해 주세요.');
@@ -31,20 +27,15 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
 
     setIsGenerating(true);
 
-    // 발송목적 및 내용과 주요 키워드를 합친 문자열 생성
     const combinedMessage = `발송목적: ${purposeContent}\n주요 키워드: ${keywords}`;
-
-    // 생성된 메시지 보여주기
     setGeneratedMessage(combinedMessage);
     setIsGenerating(false);
   };
 
-  // "다시 생성" 버튼 클릭 시 호출
   const handleRegenerateMessage = () => {
-    handleGenerateMessage(); // 동일한 요청 재실행
+    handleGenerateMessage();
   };
 
-  // 문자 사용하기 버튼 클릭 시 생성된 메시지를 부모 컴포넌트에 전달하고 팝업 닫기
   const handleUseMessage = () => {
     if (generatedMessage) {
       setAiMessage({ purposeContent: generatedMessage });
@@ -52,12 +43,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
     }
   };
 
-  // 이미지 생성하기 버튼 클릭
   const handleGenerateImage = () => {
-    // 서버로 requestData 전송 로직이 들어갈 부분
-    // 여기서 서버에 데이터를 전송하는 코드를 추가할 수 있습니다.
-
-    // 서버에서 받은 4장의 이미지 URL을 아래와 같이 임시로 설정
     const images = [
       '/path/to/image1.png',
       '/path/to/image2.png',
@@ -67,12 +53,10 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
     setGeneratedImages(images);
   };
 
-  // 이미지 선택 핸들러
   const handleImageSelect = (image) => {
     setSelectedImage(image);
   };
 
-  // 문자와 이미지 발송하기
   const handleSend = () => {
     if (selectedImage && purposeContent) {
       setAiMessage({ purposeContent, selectedImage });
@@ -84,19 +68,10 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
     <div className="popup-container">
       <div className="popup-header">
         <span onClick={() => closePopup()}>X 닫기</span>
-
-        {/* 탭 전환 버튼 */}
-        <span 
-          className={activeTab === 'text' ? 'active' : ''} 
-          onClick={() => setActiveTab('text')}
-        >
+        <span className={activeTab === 'text' ? 'active' : ''} onClick={() => setActiveTab('text')}>
           AI 문자 생성
         </span>
-
-        <span 
-          className={activeTab === 'image' ? 'active' : ''} 
-          onClick={() => setActiveTab('image')}
-        >
+        <span className={activeTab === 'image' ? 'active' : ''} onClick={() => setActiveTab('image')}>
           AI 이미지 생성
         </span>
       </div>
@@ -106,9 +81,8 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
         {activeTab === 'text' && (
           <div className="text-section">
             <div className="left-section">
-              {/* 발송목적 및 내용 입력 필드 */}
               <div className="input-section">
-                <label>발송목적 및 내용</label>
+                <label>발송 목적 및 내용</label>
                 <textarea
                   value={purposeContent}
                   onChange={(e) => setPurposeContent(e.target.value)}
@@ -116,7 +90,6 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                 />
               </div>
 
-              {/* 주요 키워드 입력 필드 */}
               <div className="input-section">
                 <label>주요 키워드</label>
                 <textarea
@@ -126,15 +99,15 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                 />
               </div>
 
-              {/* 문자 생성 및 다시 생성 버튼 */}
               <button onClick={handleGenerateMessage} disabled={isGenerating}>
                 {isGenerating ? '문자 생성 중...' : '문자 생성'}
               </button>
               <button onClick={handleRegenerateMessage} disabled={!generatedMessage}>
                 다시 생성
               </button>
+            </div>
 
-              {/* 생성된 결과 */}
+            <div className="right-section">
               <div className="result-section">
                 <label>생성 결과</label>
                 <textarea
@@ -144,12 +117,9 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                 />
               </div>
 
-              {/* 생성된 문자를 사용하기 버튼 */}
               <button onClick={handleUseMessage} disabled={!generatedMessage}>
                 이 문자 사용하기
               </button>
-
-              {/* 문자만 보낼래요 버튼 */}
               <button onClick={closePopup}>문자만 보낼래요</button>
             </div>
           </div>
@@ -157,8 +127,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
 
         {/* 이미지 생성 탭 */}
         {activeTab === 'image' && (
-          <div className="image-section">
-            {/* 왼쪽: 문자 내용 입력 및 선택 옵션 */}
+          <div className="text-section">
             <div className="left-section">
               <div className="input-section">
                 <label>문자 내용 입력</label>
@@ -221,9 +190,8 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
               <button onClick={handleGenerateImage}>이미지 생성하기</button>
             </div>
 
-            {/* 오른쪽: 생성된 이미지 표시 */}
             <div className="right-section">
-              <h3>이미지 생성</h3>
+              <label>이미지 생성</label>
               {generatedImages.length > 0 ? (
                 <div className="image-grid">
                   {generatedImages.map((image, index) => (
