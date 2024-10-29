@@ -34,15 +34,20 @@ const Login = () => {
       if (response.ok) {
         // 로그인 성공 처리
         console.log('Login successful:', data);
+        
+        // 세션 스토리지에 사용자 정보를 저장
+        sessionStorage.setItem('username', username);
+
+        // rememberMe가 true인 경우 로컬 스토리지에 사용자 정보를 저장
         if (rememberMe) {
           localStorage.setItem('username', username);
         } else {
           localStorage.removeItem('username');
         }
-        navigate('/');
+
+        navigate('/'); // 메인 페이지로 이동
       } else {
         // 로그인 실패 처리
-        // 에러 메시지를 response에서 가져오도록 수정
         setErrorMessage(data.message || 'Invalid username or password');
       }
     } catch (error) {
@@ -68,7 +73,6 @@ const Login = () => {
         <div className="header">
           <button onClick={() => navigate('/')}>BluePrint</button>
           <div className="user-options">
-            <span>회원이름</span>
             <span onClick={() => navigate('/Login')}>로그인</span>
             <span onClick={() => navigate('/Mypage')}>마이페이지</span>
           </div>

@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Mypage.css'; 
 
 function MypageStorage() {
   const navigate = useNavigate();
-  
+  const [username, setUsername] = useState(''); // 사용자 이름 상태
+
   // 더미 데이터
   const messages = [
     { id: 1, title: '안녕하세요', content: '이것은 더미 메시지입니다.' },
@@ -24,15 +25,51 @@ function MypageStorage() {
     { id: 3, src: 'gif3.gif', alt: 'GIF 3' }
   ];
 
+  useEffect(() => {
+    // 세션 스토리지에서 사용자 이름 가져오기
+    const storedUsername = sessionStorage.getItem('username');
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, []);
+
+  // 로그아웃 처리 함수
+  const handleLogout = async () => {
+    try {
+      // 로그아웃 API 호출 (예: POST 요청)
+      await fetch('http://localhost:8080/api/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      // 세션 스토리지에서 사용자 정보를 삭제
+      sessionStorage.removeItem('username');
+      setUsername(''); // 상태 업데이트
+
+      // 홈으로 이동
+      navigate('/'); // 로그아웃 후 홈으로 리다이렉트
+    } catch (error) {
+      console.error('로그아웃 중 오류 발생:', error);
+    }
+  };
+
   return (
     <div className="mypage-container">
       {/* 상단 헤더 */}
       <div className="header">
         <button onClick={() => navigate('/')}>BluePrint</button>
         <div className="user-options">
-          <span>홍길동</span>
-          <span onClick={() => navigate('/logout')}>로그아웃</span>
-          <span onClick={() => navigate('/Mypage')}>마이페이지</span>
+          {username ? (
+            <>
+              <span>{username}</span> {/* 로그인 상태에서 사용자 아이디 표시 */}
+              <span onClick={handleLogout} style={{ cursor: 'pointer', marginLeft: '10px' }}>로그아웃</span> {/* 로그아웃 버튼 */}
+            </>
+          ) : (
+            <span onClick={() => navigate('/Login')} style={{ cursor: 'pointer' }}>로그인</span>
+          )}
+          <span onClick={() => navigate('/Mypage')} style={{ cursor: 'pointer', marginLeft: '10px' }}>마이페이지</span>
         </div>
       </div>
 
