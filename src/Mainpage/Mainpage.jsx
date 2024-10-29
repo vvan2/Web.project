@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Mainpage.css';
 import AiMessagePopup from '../Aimessagepopup/Aimessagepopup';
@@ -18,6 +18,17 @@ function MainPage() {
 
   // 팝업 상태 관리
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  // 사용자 아이디 상태
+  const [username, setUsername] = useState('');
+
+  useEffect(() => {
+    // 로컬 스토리지에서 사용자 아이디를 가져오기
+    const storedUsername = localStorage.getItem('username');
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, []);
 
   // 수신번호 추가 함수
   const handleAddRecipient = () => {
@@ -67,8 +78,11 @@ function MainPage() {
         <div className="header">
           <button onClick={() => navigate('/')}>BluePrint</button>
           <div className="user-options">
-            <span>회원이름</span>
-            <span onClick={() => navigate('/Login')}>로그인</span>
+            {username ? (
+              <span>{username}</span> // 로그인 상태에서 사용자 아이디 표시
+            ) : (
+              <span onClick={() => navigate('/Login')}>로그인</span>
+            )}
             <span onClick={() => navigate('/Mypage')}>마이페이지</span>
           </div>
         </div>
@@ -161,4 +175,3 @@ function MainPage() {
 }
 
 export default MainPage;
-
