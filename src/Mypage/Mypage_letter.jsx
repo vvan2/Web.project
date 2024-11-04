@@ -13,10 +13,10 @@ function MypageMemberInfo() {
   });
 
   const [messageHistory, setMessageHistory] = useState([]);
+  const [userName, setUserName] = useState(''); // 상태 변수 이름 변경
 
   // 더미 데이터 추가
   useEffect(() => {
-    // 주석 처리된 부분을 다음과 같이 더미 데이터로 대체
     const dummyData = [
       {
         date: '2024-10-01',
@@ -55,18 +55,52 @@ function MypageMemberInfo() {
       }
     ];
     setMessageHistory(dummyData); // 더미 데이터를 설정합니다.
+
+    // 세션 스토리지에서 사용자 이름을 가져오기
+    const storedName = sessionStorage.getItem('name'); // 'username' 대신 'name' 사용
+    if (storedName) {
+      setUserName(storedName); // 'username'을 'name'으로 변경
+    }
   }, []);
+
+  // 로그아웃 처리 함수
+  const handleLogout = async () => {
+    try {
+      // 로그아웃 API 호출 (예: POST 요청)
+      await fetch('http://localhost:8080/api/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      // 세션 스토리지에서 사용자 정보를 삭제
+      sessionStorage.removeItem('username');
+      sessionStorage.removeItem('name'); // 'name'도 삭제
+      setUserName(''); // 상태 업데이트
+
+      // 홈으로 이동
+      navigate('/'); // 로그아웃 후 홈으로 리다이렉트
+    } catch (error) {
+      console.error('로그아웃 중 오류 발생:', error);
+    }
+  };
 
   return (
     <div className="mypage-container">
-      {/* 상단 헤더 */}
-      <div className="header">
-        <button onClick={() => navigate('/')}>BluePrint</button>
-        <div className="user-options">
-          <span>{userInfo.name}</span>
-          <span onClick={() => navigate('/logout')}>로그아웃</span>
-          <span onClick={() => navigate('/Mypage')}>마이페이지</span>
-        </div>
+        <div className="header">
+          <button onClick={() => navigate('/')}>BluePrint</button>
+          <div className="user-options">
+            {userName ? ( // 'username' 대신 'userName' 사용
+              <>
+                <span>{userName}</span> {/* 로그인 상태에서 사용자 이름 표시 */}
+                <span onClick={handleLogout} style={{ cursor: 'pointer', marginLeft: '10px' }}>로그아웃</span> {/* 로그아웃 버튼 */}
+              </>
+            ) : (
+              <span onClick={() => navigate('/Login')} style={{ cursor: 'pointer' }}>로그인</span>
+            )}
+            <span onClick={() => navigate('/Mypage')} style={{ cursor: 'pointer', marginLeft: '10px' }}>마이페이지</span>
+          </div>
       </div>
 
       {/* 메뉴 탭 */}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Mainpage.css';
 import AiMessagePopup from '../Aimessagepopup/Aimessagepopup';
@@ -18,6 +18,17 @@ function MainPage() {
 
   // 팝업 상태 관리
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  // 사용자 정보 상태
+  const [name, setName] = useState(''); // name으로 수정
+
+  useEffect(() => {
+    // 세션 스토리지에서 사용자 정보를 가져오기
+    const storedName = sessionStorage.getItem('name'); // name으로 수정
+    if (storedName) {
+      setName(storedName);
+    }
+  }, []);
 
   // 수신번호 추가 함수
   const handleAddRecipient = () => {
@@ -60,6 +71,27 @@ function MainPage() {
     setPreviewType(e.target.value);
   };
 
+  // 로그아웃 처리
+  const handleLogout = async () => {
+    try {
+      // 로그아웃 API 호출 (예: POST 요청)
+      await fetch('http://localhost:8080/api/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      // 세션 스토리지에서 사용자 정보를 삭제
+      sessionStorage.removeItem('name'); // name으로 수정
+      setName(''); // 상태 업데이트
+
+      // 로그인 페이지로 리다이렉션 코드를 제거했습니다.
+    } catch (error) {
+      console.error('로그아웃 중 오류 발생:', error);
+    }
+  };
+
   return (
     <>
       {/* 상단 메뉴바 */}
@@ -67,9 +99,15 @@ function MainPage() {
         <div className="header">
           <button onClick={() => navigate('/')}>BluePrint</button>
           <div className="user-options">
-            <span>회원이름</span>
-            <span onClick={() => navigate('/Login')}>로그인</span>
-            <span onClick={() => navigate('/Mypage')}>마이페이지</span>
+            {name ? ( // username 대신 name으로 수정
+              <>
+                <span>{name}</span> {/* 로그인 상태에서 사용자 이름 표시 */}
+                <span onClick={handleLogout} style={{ cursor: 'pointer', marginLeft: '10px' }}>로그아웃</span> {/* 로그아웃 버튼 */}
+              </>
+            ) : (
+              <span onClick={() => navigate('/Login')} style={{ cursor: 'pointer' }}>로그인</span>
+            )}
+            <span onClick={() => navigate('/Mypage')} style={{ cursor: 'pointer', marginLeft: '10px' }}>마이페이지</span>
           </div>
         </div>
       </div>
@@ -161,4 +199,3 @@ function MainPage() {
 }
 
 export default MainPage;
-

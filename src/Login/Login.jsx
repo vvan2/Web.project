@@ -1,24 +1,68 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // 페이지 이동을 위한 훅 추가
-import './Login.css'; // 스타일을 별도의 CSS 파일로 관리
+import { useNavigate } from 'react-router-dom';
+import './Login.css';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-  const navigate = useNavigate(); // 페이지 이동을 위한 navigate
+  const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // 로그인 처리 로직을 여기에 추가할 수 있습니다.
-    console.log('로그인 정보:', { username, password, rememberMe });
-    
-    // 로그인 성공 후 Mainpage로 이동
-    navigate('/');
+    setLoading(true);
+    setErrorMessage('');
+
+    const loginData = {
+      username: username,
+      password: password,
+    };
+
+    try {
+      const response = await fetch('http://localhost:8080/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(loginData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // 로그인 성공 처리
+        console.log('Login successful:', data);
+        
+        // 세션 스토리지에 사용자 정보를 저장
+        sessionStorage.setItem('username', data.username);
+        sessionStorage.setItem('name', data.name);
+        sessionStorage.setItem('phoneNumber', data.phoneNumber);
+        sessionStorage.setItem('message', data.message);
+
+        // rememberMe가 true인 경우 로컬 스토리지에 사용자 정보를 저장
+        if (rememberMe) {
+          localStorage.setItem('username', data.username);
+        } else {
+          localStorage.removeItem('username');
+        }
+
+        navigate('/'); // 메인 페이지로 이동
+      } else {
+        // 로그인 실패 처리
+        setErrorMessage(data.message || 'Invalid username or password');
+      }
+    } catch (error) {
+      // 서버와의 통신에서 오류가 발생했을 때
+      setErrorMessage('An error occurred during login: ' + error.message);
+      console.error('Error during login:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleRegister = () => {
-    // 회원가입 버튼을 눌렀을 때 Join 페이지로 이동
     navigate('/Join');
   };
 
@@ -28,19 +72,16 @@ const Login = () => {
 
   return (
     <div>
-      {/* 상단 메뉴바 */}
       <div className="main-container">
         <div className="header">
           <button onClick={() => navigate('/')}>BluePrint</button>
           <div className="user-options">
-            <span>회원이름</span>
             <span onClick={() => navigate('/Login')}>로그인</span>
             <span onClick={() => navigate('/Mypage')}>마이페이지</span>
           </div>
         </div>
       </div>
 
-      {/* 로그인 폼 */}
       <div className="login-container">
         <h2>로그인</h2>
         <form onSubmit={handleLogin} className="login-form">
@@ -73,9 +114,13 @@ const Login = () => {
             <label>아이디 저장</label>
           </div>
 
-          <button type="submit" className="login-btn">로그인</button>
+          <button type="submit" className="login-btn" disabled={loading}>
+            {loading ? '로그인 중...' : '로그인'}
+          </button>
           <button type="button" className="register-btn" onClick={handleRegister}>회원가입</button>
         </form>
+
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
       </div>
     </div>
   );
