@@ -4,7 +4,7 @@ import './Mypage.css';
 
 function MypageStorage() {
   const navigate = useNavigate();
-  const [username, setUsername] = useState(''); // 사용자 이름 상태
+  const [userName, setUserName] = useState(''); // 사용자 이름 상태로 변경
 
   // 더미 데이터
   const messages = [
@@ -27,9 +27,9 @@ function MypageStorage() {
 
   useEffect(() => {
     // 세션 스토리지에서 사용자 이름 가져오기
-    const storedUsername = sessionStorage.getItem('username');
-    if (storedUsername) {
-      setUsername(storedUsername);
+    const storedName = sessionStorage.getItem('name'); // 'username' 대신 'name' 사용
+    if (storedName) {
+      setUserName(storedName); // 사용자 이름 상태 업데이트
     }
   }, []);
 
@@ -45,8 +45,8 @@ function MypageStorage() {
       });
       
       // 세션 스토리지에서 사용자 정보를 삭제
-      sessionStorage.removeItem('username');
-      setUsername(''); // 상태 업데이트
+      sessionStorage.removeItem('name'); // 'username' 대신 'name' 삭제
+      setUserName(''); // 상태 업데이트
 
       // 홈으로 이동
       navigate('/'); // 로그아웃 후 홈으로 리다이렉트
@@ -61,9 +61,9 @@ function MypageStorage() {
       <div className="header">
         <button onClick={() => navigate('/')}>BluePrint</button>
         <div className="user-options">
-          {username ? (
+          {userName ? ( // 'username' 대신 'userName' 사용
             <>
-              <span>{username}</span> {/* 로그인 상태에서 사용자 아이디 표시 */}
+              <span>{userName}</span> {/* 로그인 상태에서 사용자 이름 표시 */}
               <span onClick={handleLogout} style={{ cursor: 'pointer', marginLeft: '10px' }}>로그아웃</span> {/* 로그아웃 버튼 */}
             </>
           ) : (

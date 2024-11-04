@@ -36,11 +36,14 @@ const Login = () => {
         console.log('Login successful:', data);
         
         // 세션 스토리지에 사용자 정보를 저장
-        sessionStorage.setItem('username', username);
+        sessionStorage.setItem('username', data.username);
+        sessionStorage.setItem('name', data.name);
+        sessionStorage.setItem('phoneNumber', data.phoneNumber);
+        sessionStorage.setItem('message', data.message);
 
         // rememberMe가 true인 경우 로컬 스토리지에 사용자 정보를 저장
         if (rememberMe) {
-          localStorage.setItem('username', username);
+          localStorage.setItem('username', data.username);
         } else {
           localStorage.removeItem('username');
         }

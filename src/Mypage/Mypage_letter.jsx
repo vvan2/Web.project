@@ -13,7 +13,7 @@ function MypageMemberInfo() {
   });
 
   const [messageHistory, setMessageHistory] = useState([]);
-  const [username, setUsername] = useState('');
+  const [userName, setUserName] = useState(''); // 상태 변수 이름 변경
 
   // 더미 데이터 추가
   useEffect(() => {
@@ -56,10 +56,10 @@ function MypageMemberInfo() {
     ];
     setMessageHistory(dummyData); // 더미 데이터를 설정합니다.
 
-    // 세션 스토리지에서 사용자 아이디를 가져오기
-    const storedUsername = sessionStorage.getItem('username');
-    if (storedUsername) {
-      setUsername(storedUsername);
+    // 세션 스토리지에서 사용자 이름을 가져오기
+    const storedName = sessionStorage.getItem('name'); // 'username' 대신 'name' 사용
+    if (storedName) {
+      setUserName(storedName); // 'username'을 'name'으로 변경
     }
   }, []);
 
@@ -76,7 +76,8 @@ function MypageMemberInfo() {
       
       // 세션 스토리지에서 사용자 정보를 삭제
       sessionStorage.removeItem('username');
-      setUsername(''); // 상태 업데이트
+      sessionStorage.removeItem('name'); // 'name'도 삭제
+      setUserName(''); // 상태 업데이트
 
       // 홈으로 이동
       navigate('/'); // 로그아웃 후 홈으로 리다이렉트
@@ -90,9 +91,9 @@ function MypageMemberInfo() {
         <div className="header">
           <button onClick={() => navigate('/')}>BluePrint</button>
           <div className="user-options">
-            {username ? (
+            {userName ? ( // 'username' 대신 'userName' 사용
               <>
-                <span>{username}</span> {/* 로그인 상태에서 사용자 아이디 표시 */}
+                <span>{userName}</span> {/* 로그인 상태에서 사용자 이름 표시 */}
                 <span onClick={handleLogout} style={{ cursor: 'pointer', marginLeft: '10px' }}>로그아웃</span> {/* 로그아웃 버튼 */}
               </>
             ) : (

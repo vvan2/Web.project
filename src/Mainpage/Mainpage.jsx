@@ -19,14 +19,14 @@ function MainPage() {
   // 팝업 상태 관리
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  // 사용자 아이디 상태
-  const [username, setUsername] = useState('');
+  // 사용자 정보 상태
+  const [name, setName] = useState(''); // name으로 수정
 
   useEffect(() => {
-    // 세션 스토리지에서 사용자 아이디를 가져오기
-    const storedUsername = sessionStorage.getItem('username');
-    if (storedUsername) {
-      setUsername(storedUsername);
+    // 세션 스토리지에서 사용자 정보를 가져오기
+    const storedName = sessionStorage.getItem('name'); // name으로 수정
+    if (storedName) {
+      setName(storedName);
     }
   }, []);
 
@@ -83,8 +83,8 @@ function MainPage() {
       });
       
       // 세션 스토리지에서 사용자 정보를 삭제
-      sessionStorage.removeItem('username');
-      setUsername(''); // 상태 업데이트
+      sessionStorage.removeItem('name'); // name으로 수정
+      setName(''); // 상태 업데이트
 
       // 로그인 페이지로 리다이렉션 코드를 제거했습니다.
     } catch (error) {
@@ -99,9 +99,9 @@ function MainPage() {
         <div className="header">
           <button onClick={() => navigate('/')}>BluePrint</button>
           <div className="user-options">
-            {username ? (
+            {name ? ( // username 대신 name으로 수정
               <>
-                <span>{username}</span> {/* 로그인 상태에서 사용자 아이디 표시 */}
+                <span>{name}</span> {/* 로그인 상태에서 사용자 이름 표시 */}
                 <span onClick={handleLogout} style={{ cursor: 'pointer', marginLeft: '10px' }}>로그아웃</span> {/* 로그아웃 버튼 */}
               </>
             ) : (
