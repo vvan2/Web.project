@@ -26,6 +26,10 @@ function MainPage() {
       setRecipientNumber('');
     }
   };
+  const setAiMessage = (aiMessage) => {
+    setMessageContent(aiMessage.purposeContent);
+    closePopup(); // 팝업에서 전달된 메시지를 messageContent로 설정
+  };
 
   // 문자 발송 함수 (서버로 데이터 전송)
   const handleSendMessage = () => {
@@ -129,9 +133,15 @@ function MainPage() {
           </div>
           <div className="preview-image">
             {previewType === '문자' ? (
-              <img src="/images/sms_preview.png" alt="문자 미리보기" />
+              <div className="preview-content">
+                <img src="/images/sms_preview.png" alt="문자 미리보기" />
+                <p className="preview-text">{messageContent}</p>
+              </div>
             ) : (
-              <img src="/images/kakao_preview.png" alt="카카오톡 미리보기" />
+              <div className="preview-content">
+                <img src="/images/kakao_preview.png" alt="카카오톡 미리보기" />
+                <p className="preview-text">{messageContent}</p>
+              </div>
             )}
           </div>
         </div>
@@ -154,7 +164,7 @@ function MainPage() {
 
       {/* 팝업을 조건부 렌더링 */}
       {isPopupOpen && (
-        <AiMessagePopup closePopup={closePopup} />
+        <AiMessagePopup closePopup={closePopup} setAiMessage={setAiMessage} />
       )}
     </>
   );

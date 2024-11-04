@@ -19,7 +19,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
     setReferenceImage(e.target.files[0]);
   };
 
-  const handleGenerateMessage = () => {
+  const handleGenerateMessage = async () => {
     if (!purposeContent || !keywords) {
       alert('발송목적 및 주요 키워드를 입력해 주세요.');
       return;
@@ -27,9 +27,36 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
 
     setIsGenerating(true);
 
-    const combinedMessage = `발송목적: ${purposeContent}\n주요 키워드: ${keywords}`;
-    setGeneratedMessage(combinedMessage);
-    setIsGenerating(false);
+    const userInput = {
+      userInputText: purposeContent,
+      category: keywords,
+    };
+
+    try {
+      const response = await fetch('http://localhost:8080/api/generate-message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userInput),
+      });
+
+      console.log("Response status:", response.status); // 응답 상태 코드 확인
+
+      if (!response.ok) {
+        throw new Error('문자 생성에 실패했습니다.');
+      }
+
+      const data = await response.json();
+      // content 추출
+      const generatedText = data.choices[0].message.content; // content 추출
+      setGeneratedMessage(generatedText); // UI 업데이트
+    } catch (error) {
+      console.error("Error:", error);
+      alert(error.message);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const handleRegenerateMessage = () => {
@@ -38,19 +65,50 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
 
   const handleUseMessage = () => {
     if (generatedMessage) {
-      setAiMessage({ purposeContent: generatedMessage });
-      closePopup();
+      // AI 이미지 생성 탭으로 전환하고 내용 설정
+      setActiveTab('image');
+      setPurposeContent(generatedMessage); // 생성된 메시지를 목적 내용에 설정
     }
   };
 
-  const handleGenerateImage = () => {
-    const images = [
-      '/path/to/image1.png',
-      '/path/to/image2.png',
-      '/path/to/image3.png',
-      '/path/to/image4.png',
-    ];
-    setGeneratedImages(images);
+
+  const handleGenerateImage = async () => {
+    if (!purposeContent) {
+      alert('문자 내용을 입력해 주세요.');
+      return;
+    }
+
+    const imageDTO = {
+      message: purposeContent, // 요청할 때 사용할 메시지
+    };
+
+    console.log("Sending image request with:", imageDTO); // 전송할 데이터 확인
+    try {
+      const response = await fetch('http://localhost:8080/api/createImage', { // API 경로에 맞게 수정
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(imageDTO),
+      });
+
+      console.log("Response status:", response.status); // 응답 상태 코드 확인
+
+
+      if (!response.ok) {
+        throw new Error('이미지 생성에 실패했습니다.');
+      }
+
+      const data = await response.json();
+      const imageUrls = data.map(url => {
+        const imageName = url.split('\\').pop(); // Windows 경로에서 파일 이름 추출
+        return `http://localhost:8080/api/images/${imageName}`; // API 엔드포인트로 변경
+      });
+
+      setGeneratedImages(imageUrls); // 수정된 이미지 URL을 설정
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   const handleImageSelect = (image) => {
@@ -61,6 +119,8 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
     if (selectedImage && purposeContent) {
       setAiMessage({ purposeContent, selectedImage });
       closePopup();
+    } else {
+      alert('문자 내용과 이미지를 선택해주세요.');
     }
   };
 
@@ -120,7 +180,9 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
               <button onClick={handleUseMessage} disabled={!generatedMessage}>
                 이 문자 사용하기
               </button>
-              <button onClick={closePopup}>문자만 보낼래요</button>
+              <button onClick={() => { setAiMessage({ purposeContent: generatedMessage }); closePopup(); }}>
+                문자만 보낼래요
+              </button>
             </div>
           </div>
         )}
@@ -195,12 +257,12 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
               {generatedImages.length > 0 ? (
                 <div className="image-grid">
                   {generatedImages.map((image, index) => (
-                    <div key={index}>
+                    <div key={index} className="image-item">
                       <img
                         src={image}
                         alt={`생성된 이미지 ${index + 1}`}
                         onClick={() => handleImageSelect(image)}
-                        className={selectedImage === image ? 'selected' : ''}
+                        className={`generated-image ${selectedImage === image ? 'selected' : ''}`}
                       />
                       <input
                         type="radio"
