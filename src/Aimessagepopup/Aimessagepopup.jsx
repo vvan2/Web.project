@@ -13,6 +13,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
   const [selectedImage, setSelectedImage] = useState(null);
   const [generatedMessage, setGeneratedMessage] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('text');
 
   const handleFileChange = (e) => {
@@ -46,7 +47,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
       }
 
       const data = await response.json();
-      setGeneratedMessage(data); // 받아온 메시지를 설정
+      setGeneratedMessage(data);
     } catch (error) {
       alert(error.message);
     } finally {
@@ -73,13 +74,17 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
       return;
     }
 
+    setIsLoading(true);
+
     const imageDTO = {
-      message: purposeContent, // 요청할 때 사용할 메시지
+      message: purposeContent,
+      concept: mood,
+
     };
 
-    console.log("Sending image request with:", imageDTO); // 전송할 데이터 확인
+    console.log("Sending image request with:", imageDTO);
     try {
-      const response = await fetch('http://localhost:8080/api/createImage', { // API 경로에 맞게 수정
+      const response = await fetch('http://localhost:8080/api/createImage', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -87,8 +92,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
         body: JSON.stringify(imageDTO),
       });
 
-      console.log("Response status:", response.status); // 응답 상태 코드 확인
-
+      console.log("Response status:", response.status);
 
       if (!response.ok) {
         throw new Error('이미지 생성에 실패했습니다.');
@@ -96,13 +100,15 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
 
       const data = await response.json();
       const imageUrls = data.map(url => {
-        const imageName = url.split('\\').pop(); // Windows 경로에서 파일 이름 추출
-        return `http://localhost:8080/api/images/${imageName}`; // API 엔드포인트로 변경
+        const imageName = url.split('\\').pop();
+        return `http://localhost:8080/api/images/${imageName}`;
       });
 
-      setGeneratedImages(imageUrls); // 수정된 이미지 URL을 설정
+      setGeneratedImages(imageUrls);
     } catch (error) {
       alert(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -247,7 +253,9 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                 <input type="file" onChange={handleFileChange} />
               </div>
 
-              <button onClick={handleGenerateImage}>이미지 생성하기</button>
+              <button onClick={handleGenerateImage} disabled={isLoading}>
+                {isLoading ? '이미지 생성 중...' : '이미지 생성하기'}
+              </button>
             </div>
 
             <div className="right-section">
@@ -255,31 +263,26 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
               {generatedImages.length > 0 ? (
                 <div className="image-grid">
                   {generatedImages.map((image, index) => (
-                    <div key={index} className="image-item">
-                      <img
-                        src={image}
-                        alt={`생성된 이미지 ${index + 1}`}
-                        onClick={() => handleImageSelect(image)}
-                        className={`generated-image ${selectedImage === image ? 'selected' : ''}`}
-                      />
-                      <input
-                        type="radio"
-                        checked={selectedImage === image}
-                        onChange={() => handleImageSelect(image)}
-                      />
+                    <div key={index} className={`image-container ${selectedImage === image ? 'selected' : ''}`}>
+                      <img src={image} alt={`Generated ${index}`} onClick={() => handleImageSelect(image)} />
+                      <label>
+                        <input
+                          type="radio"
+                          name="selectedImage"
+                          value={image}
+                          checked={selectedImage === image}
+                          onChange={() => handleImageSelect(image)}
+                        />
+                        선택
+                      </label>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p>이미지를 생성하려면 왼쪽에서 옵션을 선택하고 "이미지 생성하기" 버튼을 누르세요.</p>
+                <p>생성된 이미지가 없습니다.</p>
               )}
-
-              <button
-                onClick={handleSend}
-                disabled={!selectedImage}
-                className={!selectedImage ? 'disabled' : ''}
-              >
-                문자와 이미지 그대로 발송하기
+              <button onClick={handleSend} disabled={!selectedImage || !purposeContent}>
+                이 이미지 사용하기
               </button>
             </div>
 

@@ -102,12 +102,15 @@ button.disabled {
 .result-section,
 
 .image-grid {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2개의 열로 설정 */
+  gap: 10px; /* 이미지 사이 간격 설정 */
 }
 
 .image-grid div {
-  margin: 5px;
+  display: flex;
+  flex-direction: column; /* 각 이미지와 선택 라벨을 수직으로 정렬 */
+  align-items: center; /* 수평 가운데 정렬 */
 }
 
 .image-grid img {
