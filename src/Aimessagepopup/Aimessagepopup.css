@@ -38,10 +38,12 @@
   width: 100%;
 }
 
+.center-section,
 .left-section,
 .right-section {
   flex: 1;
-  margin: 10px; /* 기본 여백 추가 */
+  margin: 10px;
+  /* 기본 여백 추가 */
 }
 
 .left-section {
@@ -50,13 +52,19 @@
 }
 
 .right-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.center-section {
   display: flex;
   flex-direction: column;
 }
 
 /* 두 섹션 사이에 추가적인 여백을 줍니다 */
 .left-section {
-  margin-right: 40px; /* 오른쪽 섹션과의 간격 */
+  margin-right: 40px;
+  /* 오른쪽 섹션과의 간격 */
 }
 
 .input-section {
@@ -103,7 +111,8 @@ button.disabled {
 }
 
 .image-grid img {
-  width: 100px; /* 이미지 크기 조정 */
+  width: 100px;
+  /* 이미지 크기 조정 */
   height: auto;
   cursor: pointer;
 }
