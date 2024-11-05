@@ -15,6 +15,10 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
   const [isGenerating, setIsGenerating] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('text');
+  const [gif, setGif] = useState('');
+  const [subject, setSubject] = useState('');
+  const [action, setAction] = useState('');
+  const [location, setLocation] = useState('');
 
   const handleFileChange = (e) => {
     setReferenceImage(e.target.files[0]);
@@ -73,8 +77,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
     }
 
     setIsLoading(true);
-    
-    // 이미지 배열 초기화
+
     setGeneratedImages([]);
 
     const imageDTO = {
@@ -284,70 +287,79 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
           <div className="text-section">
             <div className="left-section">
               <div className="input-section">
-                <label>문자 내용 입력</label>
-                <textarea
-                  value={purposeContent}
-                  onChange={(e) => setPurposeContent(e.target.value)}
-                  placeholder="여기에 문자를 입력하세요."
-                />
-              </div>
-
-              <div className="input-section">
-                <label>조직</label>
-                <select value={organization} onChange={(e) => setOrganization(e.target.value)}>
+                <label>gif 유형</label>
+                <select value={gif} onChange={(e) => setGif(e.target.value)}>
                   <option value="">선택하세요</option>
-                  <option value="유치원">유치원</option>
-                  <option value="교회">교회</option>
-                  <option value="동호회">동호회</option>
+                  <option value="확대">확대</option>
+                  <option value="축소">축소</option>
+                  <option value="팝">팝</option>
+                  <option value="애니">애니</option>
                 </select>
               </div>
 
-              <div className="input-section">
-                <label>분위기</label>
-                <select value={mood} onChange={(e) => setMood(e.target.value)}>
-                  <option value="">선택하세요</option>
-                  <option value="세련된">세련된</option>
-                  <option value="따듯한">따듯한</option>
-                  <option value="극사실주의">극사실주의</option>
-                  <option value="복고풍">복고풍</option>
-                  <option value="차가운">차가운</option>
-                  <option value="무서운">무서운</option>
-                  <option value="귀여운">귀여운</option>
-                </select>
-              </div>
-
-              <div className="input-section">
-                <label>상황</label>
-                <select value={situation} onChange={(e) => setSituation(e.target.value)}>
-                  <option value="">선택하세요</option>
-                  <option value="축하">축하</option>
-                  <option value="감사">감사</option>
-                  <option value="사과">사과</option>
-                </select>
-              </div>
-
-              <div className="input-section">
-                <label>기타</label>
-                <input
-                  type="text"
-                  value={otherInfo}
-                  onChange={(e) => setOtherInfo(e.target.value)}
-                  placeholder="기타 정보를 입력하세요."
-                />
-              </div>
-
-              <div className="input-section">
-                <label>저희가 참고할 이미지를 첨부해주세요 (선택)</label>
-                <input type="file" onChange={handleFileChange} />
-              </div>
+              {gif === '애니' ? (
+                <>
+                  <div className="input-section">
+                    <label>피사체</label>
+                    <input
+                      type="text"
+                      value={subject}
+                      onChange={(e) => setSubject(e.target.value)}
+                      placeholder="피사체를 입력하세요."
+                    />
+                  </div>
+                  <div className="input-section">
+                    <label>행동</label>
+                    <input
+                      type="text"
+                      value={action}
+                      onChange={(e) => setAction(e.target.value)}
+                      placeholder="행동을 입력하세요."
+                    />
+                  </div>
+                  <div className="input-section">
+                    <label>장소</label>
+                    <input
+                      type="text"
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
+                      placeholder="장소를 입력하세요."
+                    />
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="input-section">
+                    <label>문자 내용 입력</label>
+                    <textarea
+                      value={purposeContent}
+                      onChange={(e) => setPurposeContent(e.target.value)}
+                      placeholder="여기에 문자를 입력하세요."
+                    />
+                  </div>
+                  <div className="input-section">
+                    <label>분위기</label>
+                    <select value={mood} onChange={(e) => setMood(e.target.value)}>
+                      <option value="">선택하세요</option>
+                      <option value="세련된">세련된</option>
+                      <option value="따듯한">따듯한</option>
+                      <option value="극사실주의">극사실주의</option>
+                      <option value="복고풍">복고풍</option>
+                      <option value="차가운">차가운</option>
+                      <option value="무서운">무서운</option>
+                      <option value="귀여운">귀여운</option>
+                    </select>
+                  </div>
+                </>
+              )}
 
               <button onClick={handleGenerateImage} disabled={isLoading}>
-                {isLoading ? '이미지 생성 중...' : '이미지 생성하기'}
+                {isLoading ? 'GIF 생성 중...' : 'GIF 생성하기'}
               </button>
             </div>
 
             <div className="right-section">
-              <label>이미지 생성</label>
+              <label>GIF 생성</label>
               {generatedImages.length > 0 ? (
                 <div className="image-grid">
                   {generatedImages.map((image, index) => (
@@ -357,11 +369,11 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                   ))}
                 </div>
               ) : (
-                <p>생성된 이미지가 없습니다.</p>
+                <p>생성된 GIF가 없습니다.</p>
               )}
 
               <button onClick={handleSend} disabled={!selectedImage || !purposeContent}>
-                이미지와 문자 전송하기
+                GIF와 문자 전송하기
               </button>
             </div>
           </div>
