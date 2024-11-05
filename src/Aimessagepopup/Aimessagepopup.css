@@ -68,7 +68,7 @@
 }
 
 .input-section {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 label {
@@ -99,7 +99,9 @@ button.disabled {
   cursor: not-allowed;
 }
 
-.result-section,
+.result-section {
+  margin-bottom: 20px; /* 생성 결과와 아래의 textArea 사이의 여백을 통일 */
+}
 
 .image-grid {
   display: grid;
