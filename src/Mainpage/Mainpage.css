@@ -1,6 +1,8 @@
 .main-container {
-  background-color: #f0f0f0; /* 상단바 배경 색상 */
-  padding: 10px; /* 상단바의 패딩 */
+  background-color: #f0f0f0;
+  /* 상단바 배경 색상 */
+  padding: 10px;
+  /* 상단바의 패딩 */
 }
 
 .header {
@@ -14,32 +16,44 @@
 }
 
 .horizontal-sections {
-  display: flex; /* 가로로 배치 */
-  justify-content: space-between; /* 각 섹션 사이에 여백 추가 */
-  padding: 20px; /* 섹션의 패딩 */
+  display: flex;
+  /* 가로로 배치 */
+  justify-content: space-between;
+  /* 각 섹션 사이에 여백 추가 */
+  padding: 20px;
+  /* 섹션의 패딩 */
 }
 
 .message-input-section,
 .preview-section,
 .send-section {
-  flex: 1; /* 섹션이 균등하게 차지하도록 설정 */
-  margin: 0 10px; /* 섹션 간의 여백 */
-  background-color: #fff; /* 섹션 배경 색상 */
-  padding: 15px; /* 섹션 내부 패딩 */
-  border-radius: 5px; /* 섹션의 모서리를 둥글게 */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 섹션 그림자 */
+  flex: 1;
+  /* 섹션이 균등하게 차지하도록 설정 */
+  margin: 0 10px;
+  /* 섹션 간의 여백 */
+  background-color: #fff;
+  /* 섹션 배경 색상 */
+  padding: 15px;
+  /* 섹션 내부 패딩 */
+  border-radius: 5px;
+  /* 섹션의 모서리를 둥글게 */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  /* 섹션 그림자 */
 }
 
 .message-input-section,
-.preview-section textarea{
-    width: 93%; /* 텍스트 영역이 섹션의 너비를 채우도록 설정 */
-  
+.preview-section textarea {
+  width: 93%;
+  /* 텍스트 영역이 섹션의 너비를 채우도록 설정 */
+
 }
 
- textarea {
-  width: 10%; /* 텍스트 영역이 섹션의 너비를 채우도록 설정 */
-  margin-top: 20px; /* 텍스트 영역의 상단 여백을 20px로 설정 */
-} 
+textarea {
+  width: 10%;
+  /* 텍스트 영역이 섹션의 너비를 채우도록 설정 */
+  margin-top: 20px;
+  /* 텍스트 영역의 상단 여백을 20px로 설정 */
+}
 
 
 .message-input input {
@@ -47,36 +61,95 @@
   height: 20px;
   width: 93% !important;
 }
-.message-input textarea{
+
+.message-input textarea {
   height: 200px;
   width: 93%;
 }
+
 .image-gif-upload input,
 .send-section input {
-  margin-bottom: 20px; /* 텍스트 박스와 텍스트 박스 사이 간격을 20px로 설정 */
-  padding: 10px; /* 텍스트 입력의 패딩 추가 */
-  border: 1px solid #ccc; /* 테두리 스타일 추가 */
-  border-radius: 5px; /* 모서리를 둥글게 */
+  margin-bottom: 20px;
+  /* 텍스트 박스와 텍스트 박스 사이 간격을 20px로 설정 */
+  padding: 10px;
+  /* 텍스트 입력의 패딩 추가 */
+  border: 1px solid #ccc;
+  /* 테두리 스타일 추가 */
+  border-radius: 5px;
+  /* 모서리를 둥글게 */
   width: 93% !important;
   margin-top: 20px;
 }
+
 .send-section textarea {
-    width: 93%;
+  width: 93%;
 }
+
 .send-section button {
   margin-bottom: 30px;
 }
 
 button {
-  margin-top: 10px; /* 버튼과 위 요소 간의 간격 */
-  padding: 10px 15px; /* 버튼의 패딩 */
-  border: none; /* 버튼 테두리 제거 */
-  background-color: #007bff; /* 버튼 배경 색상 */
-  color: white; /* 버튼 텍스트 색상 */
-  border-radius: 5px; /* 버튼 모서리 둥글게 */
-  cursor: pointer; /* 마우스 포인터 커서 변경 */
+  margin-top: 10px;
+  /* 버튼과 위 요소 간의 간격 */
+  padding: 10px 15px;
+  /* 버튼의 패딩 */
+  border: none;
+  /* 버튼 테두리 제거 */
+  background-color: #007bff;
+  /* 버튼 배경 색상 */
+  color: white;
+  /* 버튼 텍스트 색상 */
+  border-radius: 5px;
+  /* 버튼 모서리 둥글게 */
+  cursor: pointer;
+  /* 마우스 포인터 커서 변경 */
 }
 
 button:hover {
-  background-color: #0056b3; /* 버튼 호버 시 색상 변경 */
+  background-color: #0056b3;
+  /* 버튼 호버 시 색상 변경 */
+}
+
+.notice-section {
+  background-color: #f8f9fa;
+  /* 연한 회색 배경 */
+  padding: 10px;
+  margin-top: 15px;
+  margin-left: 10px;
+  border: 1px solid #ced4da;
+  width: 800px;
+  /* 너비를 지정합니다. */
+  height: auto;
+  /* 높이를 자동으로 설정합니다. */
+  /* 연한 회색 테두리 */
+  border-radius: 5px;
+  font-size: 14px;
+  /* 글자 크기 조정 */
+  color: #343a40;
+  /* 어두운 글자 색상 */
+}
+
+.notice-section p {
+  margin: 5px 0;
+  /* 문단 간격 */
+}
+
+.sub-container span {
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: 20px;
+
+}
+
+.basic-section p {
+  color: #343a40;
+  font-weight: bold;
+  padding: 5px;
+  margin-left: 15px;
+  font-size: 30px;
+}
+
+.header button {
+  color: #007bff;
 }
