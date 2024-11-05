@@ -76,6 +76,8 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
 
     const imageDTO = {
       message: purposeContent,
+      concept: mood,
+
     };
 
     console.log("Sending image request with:", imageDTO);
