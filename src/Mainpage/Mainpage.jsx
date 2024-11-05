@@ -37,6 +37,10 @@ function MainPage() {
       setRecipientNumber('');
     }
   };
+  const setAiMessage = (aiMessage) => {
+    setMessageContent(aiMessage.purposeContent);
+    closePopup(); // 팝업에서 전달된 메시지를 messageContent로 설정
+  };
 
   // 문자 발송 함수 (서버로 데이터 전송)
   const handleSendMessage = () => {
@@ -112,6 +116,22 @@ function MainPage() {
         </div>
       </div>
 
+      <div className="basic-section">
+        <p>문자</p>
+      </div>
+
+      <div className="sub-container">
+        <span>일반문자</span>
+        <span>광고문자</span>
+        <span>광고이용안내</span>
+      </div>
+
+      <div className="notice-section">
+        <p>90byte 초과 시, 장문으로 전환됩니다. 최대 2,000byte까지 작성이 가능합니다.</p>
+        <p>이미지 추가 시, 포토 문자로 전환됩니다. 이미지 최대 3장(권장 사이즈 640x960) + 2,000byte까지 작성이 가능합니다.</p>
+        <p>광고성 문자는 [광고문자]에서 발송해주세요. 080번호를 무료로 제공합니다.</p>
+        <p>문자 발송 시 [씨앗 {'>'} 충전금 {'>'} 포인트] 순서로 사용됩니다.</p>
+      </div>
       {/* 섹션을 가로로 배치 */}
       <div className="horizontal-sections">
         {/* 메시지 입력 섹션 */}
@@ -167,9 +187,15 @@ function MainPage() {
           </div>
           <div className="preview-image">
             {previewType === '문자' ? (
-              <img src="/images/sms_preview.png" alt="문자 미리보기" />
+              <div className="preview-content">
+                <img src="/images/sms_preview.png" alt="문자 미리보기" />
+                <p className="preview-text">{messageContent}</p>
+              </div>
             ) : (
-              <img src="/images/kakao_preview.png" alt="카카오톡 미리보기" />
+              <div className="preview-content">
+                <img src="/images/kakao_preview.png" alt="카카오톡 미리보기" />
+                <p className="preview-text">{messageContent}</p>
+              </div>
             )}
           </div>
         </div>
@@ -192,7 +218,7 @@ function MainPage() {
 
       {/* 팝업을 조건부 렌더링 */}
       {isPopupOpen && (
-        <AiMessagePopup closePopup={closePopup} />
+        <AiMessagePopup closePopup={closePopup} setAiMessage={setAiMessage} />
       )}
     </>
   );
