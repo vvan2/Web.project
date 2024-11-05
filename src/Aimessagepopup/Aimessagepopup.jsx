@@ -6,7 +6,6 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
   const [keywords, setKeywords] = useState('');
   const [organization, setOrganization] = useState('');
   const [mood, setMood] = useState('');
-  const [situation, setSituation] = useState('');
   const [otherInfo, setOtherInfo] = useState('');
   const [referenceImage, setReferenceImage] = useState(null);
   const [generatedImages, setGeneratedImages] = useState([]);
@@ -228,16 +227,6 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                   <option value="차가운">차가운</option>
                   <option value="무서운">무서운</option>
                   <option value="귀여운">귀여운</option>
-                </select>
-              </div>
-
-              <div className="input-section">
-                <label>상황</label>
-                <select value={situation} onChange={(e) => setSituation(e.target.value)}>
-                  <option value="">선택하세요</option>
-                  <option value="축하">축하</option>
-                  <option value="감사">감사</option>
-                  <option value="사과">사과</option>
                 </select>
               </div>
 
