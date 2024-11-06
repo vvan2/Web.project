@@ -113,7 +113,7 @@ function MypageMemberInfo() {
 
       {/* 메뉴 탭 */}
       <div className="tab-menu">
-        <span onClick={() => navigate('/Mypage')}>회원정보변경</span>
+        <span onClick={() => navigate('/Mypage')}>회원정보</span>
         <span onClick={() => navigate('/Mypage_pw')}>비밀번호변경</span>
         <span onClick={() => navigate('/Mypage_letter')}>발송내역</span>
         <span onClick={() => navigate('/Mypage_storage')}>보관함</span>

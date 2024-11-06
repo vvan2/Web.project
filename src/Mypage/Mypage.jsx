@@ -11,28 +11,20 @@ function MypageMemberInfo() {
     email: '',
     address: ''
   });
-  const [name, setName] = useState(''); // 사용자 이름 상태를 name으로 변경
 
   // 사용자 정보 가져오기
   useEffect(() => {
-    const storedName = sessionStorage.getItem('name'); // 'username'을 'name'으로 변경
-    if (storedName) {
-      setName(storedName);
-
-      // 서버에서 사용자 정보 가져오기
-      fetch('/api/userinfo') // 사용자 정보를 제공하는 API 엔드포인트
-        .then((response) => response.json())
-        .then((data) => {
-          setUserInfo({
-            id: data.id,
-            name: data.name,
-            phone: data.phone,
-            email: data.email,
-            address: data.address
-          });
-        })
-        .catch((error) => console.error('Error fetching user info:', error));
-    }
+    const storedUsername = sessionStorage.getItem('username');
+    const storedName = sessionStorage.getItem('name');
+    const storedPhone = sessionStorage.getItem('phoneNumber');
+    
+    setUserInfo({
+      id: storedUsername || '',
+      name: storedName || '',
+      phone: storedPhone || '',
+      email: '', // 이메일은 세션 스토리지에 없으므로 빈 값
+      address: '' // 주소는 세션 스토리지에 없으므로 빈 값
+    });
   }, []);
 
   // 로그아웃 처리 함수
@@ -44,8 +36,8 @@ function MypageMemberInfo() {
           'Content-Type': 'application/json',
         },
       });
-      sessionStorage.removeItem('name'); // 세션 스토리지에서 사용자 정보 삭제
-      setName(''); // 상태 업데이트
+      sessionStorage.clear(); // 세션 스토리지에서 사용자 정보 삭제
+      setUserInfo({ id: '', name: '', phone: '', email: '', address: '' });
       navigate('/'); // 홈으로 이동
     } catch (error) {
       console.error('Error logging out:', error);
@@ -58,9 +50,9 @@ function MypageMemberInfo() {
       <div className="header">
         <button onClick={() => navigate('/')}>BluePrint</button>
         <div className="user-options">
-          {name ? ( // name을 사용하여 로그인 상태에서 사용자 이름 표시
+          {userInfo.name ? (
             <>
-              <span>{name}</span>
+              <span>{userInfo.name}</span>
               <span onClick={handleLogout} style={{ cursor: 'pointer', marginLeft: '10px' }}>로그아웃</span>
             </>
           ) : (
@@ -72,7 +64,7 @@ function MypageMemberInfo() {
 
       {/* 메뉴 탭 */}
       <div className="tab-menu">
-        <span className="active" onClick={() => navigate('/Mypage')}>회원정보변경</span>
+        <span className="active" onClick={() => navigate('/Mypage')}>회원정보</span>
         <span onClick={() => navigate('/Mypage_pw')}>비밀번호변경</span>
         <span onClick={() => navigate('/Mypage_letter')}>발송내역</span>
         <span onClick={() => navigate('/Mypage_storage')}>보관함</span>
@@ -83,23 +75,21 @@ function MypageMemberInfo() {
       <div className="info-section">
         <div className="info-item">
           <div>아이디</div>
-          <div style={{ marginRight: '100px' }}>{userInfo.id}</div>
-          <div></div>
+          <div>{userInfo.id}</div>
         </div>
 
         <div className="info-item">
           <div>이름</div>
-          <div style={{ marginRight: '80px' }}>{userInfo.name}</div>
-          <div></div>
+          <div>{userInfo.name}</div>
         </div>
 
         <div className="info-item">
           <div>전화번호</div>
           <div>{userInfo.phone}</div>
-          <button onClick={() => navigate('/mypage/change-phone')}>전화번호 변경</button>
+          {/* <button onClick={() => navigate('/mypage/change-phone')}>전화번호 변경</button> */}
         </div>
 
-        <div className="info-item">
+        {/* <div className="info-item">
           <div>이메일</div>
           <div>{userInfo.email}</div>
           <button onClick={() => navigate('/mypage/change-email')}>이메일 변경</button>
@@ -109,7 +99,7 @@ function MypageMemberInfo() {
           <div>주소</div>
           <div>{userInfo.address}</div>
           <button onClick={() => navigate('/mypage/change-address')}>주소 변경</button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
