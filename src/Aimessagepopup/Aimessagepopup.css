@@ -103,6 +103,10 @@ button.disabled {
   margin-bottom: 20px; /* 생성 결과와 아래의 textArea 사이의 여백을 통일 */
 }
 
+.result-section textarea{
+  height: 250px;
+}
+
 .image-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr); /* 2개의 열로 설정 */

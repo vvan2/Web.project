@@ -40,12 +40,13 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
     setIsGenerating(true);
 
     const userInput = {
-      userInputText: purposeContent,
-      category: keywords,
+      purposeContent,
+      keywords: keywords.split(',').map(keyword => keyword.trim()),  // keywords를 배열로 변환
     };
 
     try {
-      const response = await fetch('/generate-text', {
+      // API 요청
+      const response = await fetch('http://localhost:8080/api/generate-message', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -57,14 +58,27 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
         throw new Error('문자 생성에 실패했습니다.');
       }
 
+      // 응답 데이터 처리
       const data = await response.json();
-      setGeneratedMessage(data);
+      console.log("API 응답:", data);  // 응답 데이터 확인
+
+      // 생성된 메시지를 적절히 가져옴
+      const generatedMessage = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+      if (generatedMessage) {
+        setGeneratedMessage(generatedMessage);
+      } else {
+        setGeneratedMessage("생성된 텍스트가 없습니다.");
+      }
+
     } catch (error) {
       alert(error.message);
     } finally {
       setIsGenerating(false);
     }
-  };
+};
+
+
+
 
   const handleRegenerateMessage = () => {
     handleGenerateMessage();
