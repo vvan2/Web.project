@@ -20,7 +20,14 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
   const [location, setLocation] = useState('');
 
   const handleFileChange = (e) => {
-    setReferenceImage(e.target.files[0]);
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setReferenceImage(reader.result.split(',')[1]); // Base64 인코딩된 이미지 설정
+    };
+    if (file) {
+      reader.readAsDataURL(file); // 파일을 Base64로 읽어들임
+    }
   };
 
   const handleGenerateMessage = async () => {
@@ -82,6 +89,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
     const imageDTO = {
       message: purposeContent,
       concept: mood,
+      base64Image: referenceImage,
     };
 
     console.log("Sending image request with:", imageDTO);
