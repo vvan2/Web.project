@@ -9,6 +9,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
   const [otherInfo, setOtherInfo] = useState('');
   const [referenceImage, setReferenceImage] = useState(null);
   const [generatedImages, setGeneratedImages] = useState([]);
+  const [generatedGIFs, setGeneratedGIFs] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [generatedMessage, setGeneratedMessage] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
@@ -83,8 +84,8 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
     }
 
     setIsLoading(true);
-
-    setGeneratedImages([]);
+    setGeneratedGIFs([]); // GIF 생성 결과를 초기화
+    setGeneratedImages([]); // 이미지 생성 결과를 초기화
 
     const imageDTO = {
       message: purposeContent,
@@ -92,7 +93,6 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
       base64Image: referenceImage,
     };
 
-    console.log("Sending image request with:", imageDTO);
     try {
       const response = await fetch('http://localhost:8080/api/createImage', {
         method: 'POST',
@@ -101,8 +101,6 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
         },
         body: JSON.stringify(imageDTO),
       });
-
-      console.log("Response status:", response.status);
 
       if (!response.ok) {
         throw new Error('이미지 생성에 실패했습니다.');
@@ -121,6 +119,67 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
       setIsLoading(false);
     }
   };
+
+  const handleGenerateGIF = async () => {
+    // 애니 유형이 아닌 경우, 문자 내용이 필수로 필요
+    if (gif !== '애니' && !purposeContent) {
+      alert('문자 내용을 입력해 주세요.');
+      return;
+    }
+  
+    // 애니 유형인 경우, 피사체, 행동, 장소만 필요
+    if (gif === '애니' && (!subject || !action || !location)) {
+      alert('피사체, 행동, 장소를 모두 입력해 주세요.');
+      return;
+    }
+  
+    setIsLoading(true);
+    setGeneratedImages([]); // 이미지 생성 결과를 초기화
+    setGeneratedGIFs([]); // GIF 생성 결과를 빈 배열로 초기화
+  
+    const gifDTO = {
+      category: gif, // gif 유형 (확대, 축소, 팝, 애니 등)
+      message: gif === '애니' ? '' : purposeContent,  // "애니" 유형일 경우 문자 내용은 빈 문자열
+      concept: gif === '애니' ? '' : mood,           // "애니" 유형일 경우 분위기는 빈 문자열
+      who: gif === '애니' ? subject : '',            // "애니" 유형일 경우 피사체만 포함
+      move: gif === '애니' ? action : '',            // "애니" 유형일 경우 행동만 포함
+      where: gif === '애니' ? location : '',         // "애니" 유형일 경우 장소만 포함
+      base64Image: referenceImage,                    // 사용자가 업로드한 이미지 (필요한 경우)
+    };
+  
+    try {
+      const response = await fetch('http://localhost:8080/api/createGIF', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(gifDTO),
+      });
+  
+      if (!response.ok) {
+        throw new Error('GIF 생성에 실패했습니다.');
+      }
+  
+      const data = await response.json();
+  
+      // data가 배열이며, data[0]이 정의되어 있는지 확인
+      if (data && Array.isArray(data.imageUrl) && data.imageUrl[0]) {
+        const gifUrl = data.imageUrl[0]; // 첫 번째 URL을 받음
+        setGeneratedGIFs([gifUrl]); // 단일 GIF URL도 배열로 설정
+
+      } else {
+        alert('GIF 생성에 실패했습니다. 반환된 데이터가 올바르지 않습니다.');
+      }
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  
+  
+  
 
   const handleImageSelect = (image) => {
     setSelectedImage(image);
@@ -334,6 +393,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                       placeholder="여기에 문자를 입력하세요."
                     />
                   </div>
+
                   <div className="input-section">
                     <label>분위기</label>
                     <select value={mood} onChange={(e) => setMood(e.target.value)}>
@@ -350,16 +410,16 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                 </>
               )}
 
-              <button onClick={handleGenerateImage} disabled={isLoading}>
+              <button onClick={handleGenerateGIF} disabled={isLoading}>
                 {isLoading ? 'GIF 생성 중...' : 'GIF 생성하기'}
               </button>
             </div>
 
             <div className="right-section">
               <label>GIF 생성</label>
-              {generatedImages.length > 0 ? (
+              {generatedGIFs.length > 0 ? (
                 <div className="image-grid">
-                  {generatedImages.map((image, index) => (
+                  {generatedGIFs.map((image, index) => (
                     <div key={index} className={`image-container ${selectedImage === image ? 'selected' : ''}`}>
                       <img src={image} alt={`Generated ${index}`} onClick={() => handleImageSelect(image)} />
                     </div>
