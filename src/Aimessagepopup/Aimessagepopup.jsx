@@ -253,7 +253,6 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                 다시 생성
               </button>
             </div>
-
             <div className="right-section">
               <div className="result-section">
                 <label>생성 결과</label>
@@ -263,6 +262,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                   placeholder="여기에 생성된 결과가 표시됩니다."
                 />
               </div>
+
 
               <button onClick={handleUseMessage} disabled={!generatedMessage}>
                 이 문자 사용하기
