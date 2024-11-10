@@ -77,9 +77,6 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
     }
 };
 
-
-
-
   const handleRegenerateMessage = () => {
     handleGenerateMessage();
   };
