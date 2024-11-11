@@ -278,7 +278,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
               <div className="input-section">
                 <label>문자 내용 입력</label>
                 <textarea
-                  value={purposeContent}
+                  value={generatedMessage}
                   onChange={(e) => setPurposeContent(e.target.value)}
                   placeholder="여기에 문자를 입력하세요."
                 />
@@ -399,7 +399,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                   <div className="input-section">
                     <label>문자 내용 입력</label>
                     <textarea
-                      value={purposeContent}
+                      value={generatedMessage}
                       onChange={(e) => setPurposeContent(e.target.value)}
                       placeholder="여기에 문자를 입력하세요."
                     />
