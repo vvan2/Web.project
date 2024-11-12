@@ -205,16 +205,21 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
   };
 
   const handleSend = async () => {
-    if (purposeContent && selectedImage) {
-      // 이미지 URL을 파일로 변환
-      const imageFile = await urlToFile(selectedImage);
-  
-      // 생성된 이미지 파일을 상위 컴포넌트로 전달
-      setAiMessage({ purposeContent, selectedImage: imageFile });
-      closePopup();
-    } else {
+    if (!purposeContent || !selectedImage) {
       alert('문자 내용과 이미지를 선택해주세요.');
+      return;
     }
+  
+    if (activeTab === 'gif') {
+      // GIF 탭에서 선택한 경우 - URL 문자열 그대로 전송
+      setAiMessage({ purposeContent, selectedImage }); // selectedImage는 URL 문자열 그대로
+    } else {
+      // 이미지 탭에서 선택한 경우 - URL을 파일로 변환하여 전송
+      const imageFile = await urlToFile(selectedImage);
+      setAiMessage({ purposeContent, selectedImage: imageFile });
+    }
+  
+    closePopup();
   };
   
   // 이미지 URL을 파일로 변환하는 함수
