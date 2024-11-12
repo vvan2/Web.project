@@ -284,7 +284,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                 />
               </div>
 
-              <div className="input-section">
+              {/* <div className="input-section">
                 <label>조직</label>
                 <select value={organization} onChange={(e) => setOrganization(e.target.value)}>
                   <option value="">선택하세요</option>
@@ -292,7 +292,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                   <option value="교회">교회</option>
                   <option value="동호회">동호회</option>
                 </select>
-              </div>
+              </div> */}
 
               <div className="input-section">
                 <label>분위기</label>
@@ -308,7 +308,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                 </select>
               </div>
 
-              <div className="input-section">
+              {/* <div className="input-section">
                 <label>기타</label>
                 <input
                   type="text"
@@ -316,7 +316,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                   onChange={(e) => setOtherInfo(e.target.value)}
                   placeholder="기타 정보를 입력하세요."
                 />
-              </div>
+              </div> */}
 
               <div className="input-section">
                 <label>저희가 참고할 이미지를 첨부해주세요 (선택)</label>
