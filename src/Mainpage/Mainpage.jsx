@@ -37,10 +37,13 @@ function MainPage() {
       setRecipientNumber('');
     }
   };
+  // 수정된 코드
   const setAiMessage = (aiMessage) => {
-    setMessageContent(aiMessage.purposeContent);
-    closePopup(); // 팝업에서 전달된 메시지를 messageContent로 설정
+    setMessageContent(aiMessage.purposeContent); // 문자 내용 설정
+    setImage(aiMessage.selectedImage); // 이미지도 설정
+    closePopup(); 
   };
+
 
   // 문자 발송 함수 (서버로 데이터 전송)
   const handleSendMessage = () => {
@@ -157,9 +160,18 @@ function MainPage() {
           {/* 이미지 또는 GIF 추가 섹션 */}
           <div className="image-gif-upload">
             <div>이미지 or GIF 추가</div>
+            
+            {/* 이미지 미리보기: image 상태가 있을 때만 표시 */}
+            {image && (
+              <div className="image-preview">
+                <br></br>
+                <img src={URL.createObjectURL(image)} alt="미리보기 이미지" style={{ maxWidth: '50%', height: 'auto', marginBottom: '10px' }} />
+              </div>
+            )}
+            
             <input type="file" onChange={handleImageUpload} />
-            {image && <div>이미지 미리보기: {image.name}</div>}
           </div>
+
         </div>
 
         {/* 미리보기 섹션 */}
@@ -185,16 +197,28 @@ function MainPage() {
               카카오톡
             </label>
           </div>
-          <div className="preview-image">
+          <div className="preview-message">
             {previewType === '문자' ? (
-              <div className="preview-content">
-                <img src="/images/sms_preview.png" alt="문자 미리보기" />
-                <p className="preview-text">{messageContent}</p>
+              <div className="message-preview">
+                <div className="message-header">{messageContent}</div>
+                <div className="message-body">
+                  {image && (
+                    <img src={URL.createObjectURL(image)} alt="미리보기 이미지" className="message-image" />
+                  )}
+                
+                </div>
+                <div className="message-footer">[Web발신]<br></br> {messageContent}</div>
               </div>
             ) : (
-              <div className="preview-content">
-                <img src="/images/kakao_preview.png" alt="카카오톡 미리보기" />
-                <p className="preview-text">{messageContent}</p>
+              <div className="kakao-preview">
+                <div className="kakao-header">{messageContent}</div>
+                <div className="kakao-body">
+                  {image && (
+                    <img src={URL.createObjectURL(image)} alt="미리보기 이미지" className="message-image" />
+                  )}
+                
+                </div>
+                <div className="kakao-footer">[Web발신]<br></br> {messageContent} </div>
               </div>
             )}
           </div>
