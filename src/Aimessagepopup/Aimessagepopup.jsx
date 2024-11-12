@@ -81,12 +81,20 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
     handleGenerateMessage();
   };
 
+  // const handleUseMessage = () => {
+  //   if (generatedMessage) {
+  //     setActiveTab('image');
+  //     setPurposeContent(generatedMessage);
+  //   }
+  // };
   const handleUseMessage = () => {
     if (generatedMessage) {
       setActiveTab('image');
-      setPurposeContent(generatedMessage);
+      setPurposeContent(generatedMessage); 
+      setGeneratedMessage(generatedMessage); // generatedMessage도 업데이트
     }
   };
+  
 
   const handleGenerateImage = async () => {
     if (!purposeContent) {
@@ -196,13 +204,27 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
     setSelectedImage(image);
   };
 
-  const handleSend = () => {
-    if (selectedImage && purposeContent) {
-      setAiMessage({ purposeContent, selectedImage });
+  const handleSend = async () => {
+    if (purposeContent && selectedImage) {
+      // 이미지 URL을 파일로 변환
+      const imageFile = await urlToFile(selectedImage);
+  
+      // 생성된 이미지 파일을 상위 컴포넌트로 전달
+      setAiMessage({ purposeContent, selectedImage: imageFile });
       closePopup();
     } else {
       alert('문자 내용과 이미지를 선택해주세요.');
     }
+  };
+  
+  // 이미지 URL을 파일로 변환하는 함수
+  const urlToFile = async (url) => {
+    const response = await fetch(url);  // URL에서 이미지 데이터를 가져옵니다
+    const blob = await response.blob();  // Blob으로 변환
+    const filename = url.split('/').pop();  // URL에서 파일 이름을 추출
+  
+    // Blob을 파일로 변환하여 반환
+    return new File([blob], filename, { type: blob.type });
   };
 
   return (
@@ -255,7 +277,6 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                 <label>생성 결과</label>
                 <textarea
                   value={generatedMessage}
-                  readOnly
                   placeholder="여기에 생성된 결과가 표시됩니다."
                 />
               </div>
@@ -276,12 +297,16 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
           <div className="text-section">
             <div className="left-section">
               <div className="input-section">
-                <label>문자 내용 입력</label>
+              <label>문자 내용 입력</label>
                 <textarea
                   value={generatedMessage}
-                  onChange={(e) => setPurposeContent(e.target.value)}
+                  onChange={(e) => {
+                    setGeneratedMessage(e.target.value);
+                    setPurposeContent(e.target.value); 
+                  }}
                   placeholder="여기에 문자를 입력하세요."
                 />
+
               </div>
 
               {/* <div className="input-section">
@@ -342,7 +367,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                 <p>생성된 이미지가 없습니다.</p>
               )}
 
-              <button onClick={handleSend} disabled={!selectedImage || !purposeContent}>
+              <button onClick={handleSend} disabled={!purposeContent}>
                 이미지와 문자 전송하기
               </button>
             </div>
@@ -400,7 +425,10 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                     <label>문자 내용 입력</label>
                     <textarea
                       value={generatedMessage}
-                      onChange={(e) => setPurposeContent(e.target.value)}
+                      onChange={(e) => {
+                        setGeneratedMessage(e.target.value);
+                        setPurposeContent(e.target.value); 
+                      }}
                       placeholder="여기에 문자를 입력하세요."
                     />
                   </div>
