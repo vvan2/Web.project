@@ -31,13 +31,31 @@ function MainPage() {
     }
   }, []);
 
-  // 수신번호 추가 함수
-  const handleAddRecipient = () => {
-    if (recipientNumber && !recipients.includes(recipientNumber)) {
-      setRecipients([...recipients, recipientNumber]);
-      setRecipientNumber('');
-    }
-  };
+  // 수신번호 입력 변경 핸들러 (숫자만 입력 가능)
+const handleRecipientNumberChange = (e) => {
+  const input = e.target.value;
+  // 숫자인지 확인하고 상태 업데이트
+  if (/^\d*$/.test(input)) { // 정규식을 사용해 숫자만 허용
+    setRecipientNumber(input);
+  }
+};
+
+// 수신번호 추가 함수
+const handleAddRecipient = () => {
+  // 유효성 검사: 숫자만, 11자리인지 확인
+  if (recipientNumber.length !== 11) {
+    alert('전화번호는 정확히 11자리여야 합니다.');
+    return;
+  }
+  if (recipients.includes(recipientNumber)) {
+    alert('이미 추가된 번호입니다.');
+    return;
+  }
+
+  setRecipients([...recipients, recipientNumber]);
+  setRecipientNumber(''); // 입력 필드 초기화
+};
+
 
   const setAiMessage = (aiMessage) => {
     setMessageContent(aiMessage.purposeContent);
@@ -243,13 +261,14 @@ function MainPage() {
             type="text"
             placeholder="수신번호 입력"
             value={recipientNumber}
-            onChange={(e) => setRecipientNumber(e.target.value)}
+            onChange={handleRecipientNumberChange} // 변경된 핸들러
           />
           <button onClick={handleAddRecipient}>번호 추가</button>
           <div>받는 사람</div>
           <textarea readOnly value={recipients.join('\n')}></textarea>
           <button onClick={handleSendMessage}>발송하기</button>
         </div>
+
       </div>
 
       {/* 팝업을 조건부 렌더링 */}
