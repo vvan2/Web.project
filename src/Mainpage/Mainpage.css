@@ -197,6 +197,7 @@ button:hover {
 .message-header, .message-footer {
   white-space: pre-line;
   word-wrap: break-word;
+  word-break: break-all; 
   font-size: 14px;
   font-weight: bold;
   color: #a1a1a1;
@@ -250,6 +251,7 @@ button:hover {
 .kakao-header, .kakao-footer {
   white-space: pre-line;
   word-wrap: break-word;
+  word-break: break-all; 
   font-size: 14px;
   font-weight: bold;
   color: #a1a1a1;

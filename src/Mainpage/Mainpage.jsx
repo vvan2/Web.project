@@ -12,6 +12,7 @@ function MainPage() {
   const [recipientNumber, setRecipientNumber] = useState('');
   const [recipients, setRecipients] = useState([]);
   const [image, setImage] = useState(null);
+  const [imageURL, setImageURL] = useState(null);
 
   // 미리보기 선택 상태
   const [previewType, setPreviewType] = useState('문자'); // 기본값은 문자
@@ -30,18 +31,46 @@ function MainPage() {
     }
   }, []);
 
-  // 수신번호 추가 함수
-  const handleAddRecipient = () => {
-    if (recipientNumber && !recipients.includes(recipientNumber)) {
-      setRecipients([...recipients, recipientNumber]);
-      setRecipientNumber('');
-    }
-  };
-  // 수정된 코드
+  // 수신번호 입력 변경 핸들러 (숫자만 입력 가능)
+const handleRecipientNumberChange = (e) => {
+  const input = e.target.value;
+  // 숫자인지 확인하고 상태 업데이트
+  if (/^\d*$/.test(input)) { // 정규식을 사용해 숫자만 허용
+    setRecipientNumber(input);
+  }
+};
+
+// 수신번호 추가 함수
+const handleAddRecipient = () => {
+  // 유효성 검사: 숫자만, 11자리인지 확인
+  if (recipientNumber.length !== 11) {
+    alert('전화번호는 정확히 11자리여야 합니다.');
+    return;
+  }
+  if (recipients.includes(recipientNumber)) {
+    alert('이미 추가된 번호입니다.');
+    return;
+  }
+
+  setRecipients([...recipients, recipientNumber]);
+  setRecipientNumber(''); // 입력 필드 초기화
+};
+
+
   const setAiMessage = (aiMessage) => {
-    setMessageContent(aiMessage.purposeContent); // 문자 내용 설정
-    setImage(aiMessage.selectedImage); // 이미지도 설정
-    closePopup(); 
+    setMessageContent(aiMessage.purposeContent);
+    
+    if (typeof aiMessage.selectedImage === 'string') {
+      // URL 형태로 받은 이미지일 때 처리
+      setImageURL(aiMessage.selectedImage);
+      setImage(null); // 파일 객체 초기화
+    } else {
+      // 파일 객체일 때 처리
+      setImage(aiMessage.selectedImage);
+      setImageURL(null);
+    }
+    
+    closePopup();
   };
 
 
@@ -60,7 +89,8 @@ function MainPage() {
   // 이미지 추가 함수 (추후 파일 업로드 로직 추가 가능)
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
-    setImage(file);
+    setImage(file); // 파일 객체를 상태로 저장
+    setImageURL(null); // URL 초기화
   };
 
   // 팝업 열기 함수
@@ -200,25 +230,25 @@ function MainPage() {
           <div className="preview-message">
             {previewType === '문자' ? (
               <div className="message-preview">
-                <div className="message-header">{messageContent}</div>
+                <div className="message-header">{messageContent.split('\n')[0]}</div>
                 <div className="message-body">
                   {image && (
                     <img src={URL.createObjectURL(image)} alt="미리보기 이미지" className="message-image" />
                   )}
                 
                 </div>
-                <div className="message-footer">[Web발신]<br></br> {messageContent}</div>
+                <div className="message-footer">[Web발신]<br></br> {messageContent} <p>{imageURL}</p></div>
               </div>
             ) : (
               <div className="kakao-preview">
-                <div className="kakao-header">{messageContent}</div>
+                <div className="kakao-header">{messageContent.split('\n')[0]}</div>
                 <div className="kakao-body">
                   {image && (
                     <img src={URL.createObjectURL(image)} alt="미리보기 이미지" className="message-image" />
                   )}
                 
                 </div>
-                <div className="kakao-footer">[Web발신]<br></br> {messageContent} </div>
+                <div className="kakao-footer">[Web발신]<br></br> {messageContent} <p>{imageURL}</p> </div>
               </div>
             )}
           </div>
@@ -231,13 +261,14 @@ function MainPage() {
             type="text"
             placeholder="수신번호 입력"
             value={recipientNumber}
-            onChange={(e) => setRecipientNumber(e.target.value)}
+            onChange={handleRecipientNumberChange} // 변경된 핸들러
           />
           <button onClick={handleAddRecipient}>번호 추가</button>
           <div>받는 사람</div>
           <textarea readOnly value={recipients.join('\n')}></textarea>
           <button onClick={handleSendMessage}>발송하기</button>
         </div>
+
       </div>
 
       {/* 팝업을 조건부 렌더링 */}
