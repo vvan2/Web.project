@@ -304,7 +304,7 @@ const handleAddRecipient = () => {
             value={recipientNumber}
             onChange={handleRecipientNumberChange} // 변경된 핸들러
           />
-          <button style={{justifyContent: 'flex-end'}} onClick={handleAddRecipient}>번호 추가</button>
+          <button style={{justifyContent: 'flex-end', marginRight:'15px'}} onClick={handleAddRecipient}>번호 추가</button>
           
           <br></br><br></br><br></br><br></br>
           <div>받는 사람</div>
@@ -317,12 +317,12 @@ const handleAddRecipient = () => {
                   type="text"
                   value={recipient}
                 />
-                <button onClick={() => handleRemoveRecipient(index)}>삭제</button>
+                <button style={{marginTop:'30px', marginRight:'30px'}} onClick={() => handleRemoveRecipient(index)}>삭제</button>
               </div>
             ))}
           </div>
 
-          <button onClick={handleSendMessage}>발송하기</button>
+          <button style={{marginRight:'15px'}} onClick={handleSendMessage}>발송하기</button>
         </div>
 
       </div>

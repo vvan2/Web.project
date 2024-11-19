@@ -189,12 +189,8 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
   
       const data = await response.json();
   
-      if (data && Array.isArray(data.imageUrl) && data.imageUrl[0]) {
-        const gifUrl = data.imageUrl[0];
-        setGeneratedGIFs([gifUrl]);
-        
-        // GIF가 있으면 첫 번째 GIF를 자동으로 선택
-        setSelectedImage(gifUrl);
+      if (data && Array.isArray(data.imageUrl)) {
+        setGeneratedGIFs(data.imageUrl); // 모든 GIF URL을 상태로 저장
       } else {
         alert('GIF 생성에 실패했습니다. 반환된 데이터가 올바르지 않습니다.');
       }
@@ -204,6 +200,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
       setIsLoading(false);
     }
   };
+  
 
   const handleImageSelect = (image) => {
     setSelectedImage(image);
@@ -321,15 +318,45 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
 
               </div>
 
-              {/* <div className="input-section">
-                <label>조직</label>
-                <select value={organization} onChange={(e) => setOrganization(e.target.value)}>
-                  <option value="">선택하세요</option>
-                  <option value="유치원">유치원</option>
-                  <option value="교회">교회</option>
-                  <option value="동호회">동호회</option>
-                </select>
-              </div> */}
+              <div className="input-section">
+              <label>조직</label>
+              <select
+                value={organization}
+                onChange={(e) => {
+                  if (e.target.value !== '기타') {
+                    setOrganization(e.target.value); // 기타가 아니면 선택된 값을 그대로 설정
+                    setOtherInfo(''); // 기타 입력 필드를 초기화
+                  } else {
+                    setOrganization('기타'); // 기타를 선택하면 organization을 기타로 설정
+                  }
+                }}
+              >
+                <option value="">선택하세요</option>
+                <option value="유치원">유치원</option>
+                <option value="교회">교회</option>
+                <option value="학교">학교</option>
+                <option value="의류 브랜드">의류 브랜드</option>
+                <option value="회사">회사</option>
+                <option value="기타">기타</option>
+              </select>
+            </div>
+
+            {/* "기타"를 선택했을 때만 활성화 */}
+            {organization === '기타' && (
+              <div className="input-section">
+                <label>기타</label>
+                <input
+                  type="text"
+                  value={otherInfo}
+                  onChange={(e) => {
+                    setOtherInfo(e.target.value); // otherInfo 업데이트
+                    setOrganization(e.target.value); // organization을 otherInfo 값으로 설정
+                  }}
+                  placeholder="원하는 조직을 입력하세요."
+                />
+              </div>
+            )}
+
 
               <div className="input-section">
                 <label>분위기</label>
@@ -345,15 +372,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                 </select>
               </div>
 
-              {/* <div className="input-section">
-                <label>기타</label>
-                <input
-                  type="text"
-                  value={otherInfo}
-                  onChange={(e) => setOtherInfo(e.target.value)}
-                  placeholder="기타 정보를 입력하세요."
-                />
-              </div> */}
+              
 
               <div className="input-section">
                 <label>저희가 참고할 이미지를 첨부해주세요 (선택)</label>
