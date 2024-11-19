@@ -74,7 +74,12 @@ const Login = () => {
     <div>
       <div className="main-container">
         <div className="header">
-          <button onClick={() => navigate('/')}>BluePrint</button>
+          <span 
+            onClick={() => navigate('/')} 
+            style={{  fontWeight: 'bold', fontSize: '30px', cursor: 'pointer' }}
+          >
+            BluePrint
+          </span>
           <div className="user-options">
             <span onClick={() => navigate('/Login')}>로그인</span>
             <span onClick={() => navigate('/Mypage')}>마이페이지</span>
