@@ -75,8 +75,8 @@ label {
   font-weight: bold;
 }
 
-textarea {
-  width: 100%;
+.popup-container textarea {
+  width: 95%;
   height: 80px;
   border-radius: 4px;
   border: 1px solid #ccc;
@@ -84,14 +84,20 @@ textarea {
   resize: none;
 }
 
-button {
+.popup-container button {
   padding: 10px;
-  background-color: #007bff;
-  color: white;
+  background-color: #d3e3fd;
+  color: black;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   margin-top: 5px;
+  width: 102%; /* 버튼 가로 길이를 전체 너비의 80%로 설정 */
+}
+
+.popup-container button:hover {
+  background-color: #aac8f6;
+  /* 버튼 호버 시 색상 변경 */
 }
 
 button.disabled {

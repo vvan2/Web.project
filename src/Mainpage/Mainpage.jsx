@@ -31,6 +31,26 @@ function MainPage() {
     }
   }, []);
 
+  useEffect(() => {
+    // 상단바 배경색 설정
+    const headerElement = document.querySelector('.header');
+    if (headerElement) {
+      // headerElement.style.backgroundColor = '#d3e3fd'; // 원하는 상단바 배경색
+      headerElement.style.color = 'black'; // 텍스트 색상 설정
+    }
+    // body 배경색 설정
+    document.body.style.backgroundColor = "#d3e3fd"; // 배경색 설정
+    
+    return () => {
+      // 컴포넌트 언마운트 시 초기화
+      if (headerElement) {
+        headerElement.style.backgroundColor = '';
+      }
+      document.body.style.backgroundColor = ""; // 컴포넌트 언마운트 시 초기화
+    };
+  }, []);
+
+
   // 수신번호 입력 변경 핸들러 (숫자만 입력 가능)
 const handleRecipientNumberChange = (e) => {
   const input = e.target.value;
@@ -129,6 +149,20 @@ const handleAddRecipient = () => {
     }
   };
 
+  // 수신번호 수정 함수
+    const handleRecipientEdit = (index, newValue) => {
+      const updatedRecipients = [...recipients];
+      updatedRecipients[index] = newValue; // 선택한 인덱스의 값을 업데이트
+      setRecipients(updatedRecipients);
+    };
+
+    // 수신번호 삭제 함수
+    const handleRemoveRecipient = (index) => {
+      const updatedRecipients = recipients.filter((_, i) => i !== index); // 선택한 인덱스를 제외
+      setRecipients(updatedRecipients);
+    };
+
+
   return (
     <>
       {/* 상단 메뉴바 */}
@@ -172,7 +206,7 @@ const handleAddRecipient = () => {
           <div className="message-input">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ marginRight: '10px' }}>메시지 입력</div>
-              <button onClick={openPopup} className="ai-generate-button">AI 자동 생성</button>
+              <button style={{ marginRight: '10px' }} onClick={openPopup} className="ai-generate-button">AI 자동 생성</button>
             </div>
             <input
               type="text"
@@ -181,12 +215,14 @@ const handleAddRecipient = () => {
               onChange={(e) => setMessageTitle(e.target.value)}
             />
             <textarea
+              style={{ width: '97%' }}
               placeholder="내용을 입력해주세요"
               value={messageContent}
               onChange={(e) => setMessageContent(e.target.value)}
             />
           </div>
 
+          <br></br><br></br>
           {/* 이미지 또는 GIF 추가 섹션 */}
           <div className="image-gif-upload">
             <div>이미지 or GIF 추가</div>
@@ -263,9 +299,24 @@ const handleAddRecipient = () => {
             value={recipientNumber}
             onChange={handleRecipientNumberChange} // 변경된 핸들러
           />
-          <button onClick={handleAddRecipient}>번호 추가</button>
+          <button style={{justifyContent: 'flex-end'}} onClick={handleAddRecipient}>번호 추가</button>
+          
+          <br></br><br></br><br></br><br></br>
           <div>받는 사람</div>
-          <textarea readOnly value={recipients.join('\n')}></textarea>
+          <br></br>
+          {/* <textarea readOnly style={{width:'97%'}} value={recipients.join('\n')}></textarea> */}
+          <div className="recipients-list">
+            {recipients.map((recipient, index) => (
+              <div key={index} className="recipient-item">
+                <input
+                  type="text"
+                  value={recipient}
+                />
+                <button onClick={() => handleRemoveRecipient(index)}>삭제</button>
+              </div>
+            ))}
+          </div>
+
           <button onClick={handleSendMessage}>발송하기</button>
         </div>
 
