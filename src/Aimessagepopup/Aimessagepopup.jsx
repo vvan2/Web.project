@@ -115,6 +115,9 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
     };
   
     try {
+
+      console.log("Base64 이미지 데이터:", referenceImage);
+
       const response = await fetch('http://localhost:8080/api/createImage', {
         method: 'POST',
         headers: {
@@ -237,7 +240,6 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
   return (
     <div className="popup-container">
       <div className="popup-header">
-        <span onClick={() => closePopup()}>X 닫기</span>
         <span className={activeTab === 'text' ? 'active' : ''} onClick={() => setActiveTab('text')}>
           AI 문자 생성
         </span>
@@ -247,6 +249,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
         <span className={activeTab === 'gif' ? 'active' : ''} onClick={() => setActiveTab('gif')}>
           AI gif 생성
         </span>
+        <span onClick={() => closePopup()}>X 닫기</span>
       </div>
 
       <div className="popup-content">

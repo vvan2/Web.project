@@ -103,7 +103,12 @@ function MypageMemberInfo() {
     <div className="mypage-container">
       {/* 상단 헤더 */}
       <div className="header">
-        <button onClick={() => navigate('/')}>BluePrint</button>
+      <span 
+          onClick={() => navigate('/')} 
+          style={{  fontWeight: 'bold', fontSize: '30px', cursor: 'pointer' }}
+        >
+          BluePrint
+        </span>
         <div className="user-options">
           {userName ? ( // 'username' 대신 'userName' 사용
             <>

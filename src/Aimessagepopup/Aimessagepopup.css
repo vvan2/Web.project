@@ -15,17 +15,31 @@
 .popup-header {
   display: flex;
   justify-content: space-between;
-  padding: 15px;
-  border-bottom: 1px solid #ddd;
+  align-items: center;
+  padding: 15px 20px;
+  background: linear-gradient(135deg, #6db3f2, #1e69de);
+  color: #fff; /* 텍스트 색상 */
+  font-weight: bold;
+  font-size: 1.2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
+  border-radius: 12px 12px 0 0; /* 상단 모서리 둥글게 */
 }
 
 .popup-header span {
   cursor: pointer;
-  font-weight: bold;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
-.active {
-  color: #007bff;
+.popup-header span:hover {
+  background: rgba(30, 105, 222, 0.1); /* 텍스트 호버 시 약간의 배경 강조 */
+  color: gold; /* 호버 시 더 진한 파란색 */
+}
+
+.popup-header span.active {
+  text-decoration: underline;
+  color: gold;
 }
 
 .popup-content {
@@ -75,8 +89,8 @@ label {
   font-weight: bold;
 }
 
-textarea {
-  width: 100%;
+.popup-container textarea {
+  width: 95%;
   height: 80px;
   border-radius: 4px;
   border: 1px solid #ccc;
@@ -84,14 +98,20 @@ textarea {
   resize: none;
 }
 
-button {
+.popup-container button {
   padding: 10px;
-  background-color: #007bff;
+  background-color: #d3e3fd;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   margin-top: 5px;
+  width: 102%; /* 버튼 가로 길이를 전체 너비의 80%로 설정 */
+}
+
+.popup-container button:hover {
+  background-color: #aac8f6;
+  /* 버튼 호버 시 색상 변경 */
 }
 
 button.disabled {
