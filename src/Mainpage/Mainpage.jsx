@@ -138,16 +138,20 @@ const handleAddRecipient = () => {
           'Content-Type': 'application/json',
         },
       });
-      
-      // 세션 스토리지에서 사용자 정보를 삭제
-      sessionStorage.removeItem('name'); // name으로 수정
-      setName(''); // 상태 업데이트
-
-      // 로그인 페이지로 리다이렉션 코드를 제거했습니다.
+  
+      // 세션 스토리지의 모든 정보 삭제
+      sessionStorage.clear();
+  
+      // 상태 초기화
+      setName(''); 
+  
+      // 로그인 페이지로 이동
+      navigate('/Login'); // 필요한 경우 리다이렉션 추가
     } catch (error) {
       console.error('로그아웃 중 오류 발생:', error);
     }
   };
+  
 
   // 수신번호 수정 함수
     const handleRecipientEdit = (index, newValue) => {
