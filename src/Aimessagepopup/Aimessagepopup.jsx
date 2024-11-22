@@ -22,7 +22,17 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
   const [action, setAction] = useState('');
   const [location, setLocation] = useState('');
 
+  // 세션 확인 함수
+  const isSessionValid = () => {
+    const username = sessionStorage.getItem('username');
+    return Boolean(username); // 세션이 유효하면 true 반환
+  };
+
   const handleFileChange = (e) => {
+    if (!isSessionValid()) {
+      alert('세션이 유효하지 않습니다. 다시 로그인해주세요.');
+      return;
+    }
     const file = e.target.files[0];
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -34,6 +44,10 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
   };
 
   const handleGenerateMessage = async () => {
+    if (!isSessionValid()) {
+      alert('세션이 유효하지 않습니다. 다시 로그인해주세요.');
+      return;
+    }
     if (!purposeContent || !keywords) {
       alert('발송목적 및 주요 키워드를 입력해 주세요.');
       return;
@@ -43,7 +57,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
 
     const userInput = {
       purposeContent,
-      keywords: keywords.split(',').map(keyword => keyword.trim()),  // keywords를 배열로 변환
+      keywords: keywords.split(',').map((keyword) => keyword.trim()), // keywords를 배열로 변환
     };
 
     try {
@@ -62,61 +76,65 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
 
       // 응답 데이터 처리
       const data = await response.json();
-      console.log("API 응답:", data);  // 응답 데이터 확인
+      console.log('API 응답:', data); // 응답 데이터 확인
 
       // 생성된 메시지를 적절히 가져옴
-      const generatedMessage = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+      const generatedMessage =
+        data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
       if (generatedMessage) {
         setGeneratedMessage(generatedMessage);
       } else {
-        setGeneratedMessage("생성된 텍스트가 없습니다.");
+        setGeneratedMessage('생성된 텍스트가 없습니다.');
       }
-
     } catch (error) {
       alert(error.message);
     } finally {
       setIsGenerating(false);
     }
-};
+  };
 
   const handleRegenerateMessage = () => {
+    if (!isSessionValid()) {
+      alert('세션이 유효하지 않습니다. 다시 로그인해주세요.');
+      return;
+    }
     handleGenerateMessage();
   };
 
-  // const handleUseMessage = () => {
-  //   if (generatedMessage) {
-  //     setActiveTab('image');
-  //     setPurposeContent(generatedMessage);
-  //   }
-  // };
   const handleUseMessage = () => {
+    if (!isSessionValid()) {
+      alert('세션이 유효하지 않습니다. 다시 로그인해주세요.');
+      return;
+    }
     if (generatedMessage) {
       setActiveTab('image');
-      setPurposeContent(generatedMessage); 
+      setPurposeContent(generatedMessage);
       setGeneratedMessage(generatedMessage); // generatedMessage도 업데이트
     }
   };
-  
 
   const handleGenerateImage = async () => {
+    if (!isSessionValid()) {
+      alert('세션이 유효하지 않습니다. 다시 로그인해주세요.');
+      return;
+    }
     if (!purposeContent) {
       alert('문자 내용을 입력해 주세요.');
       return;
     }
-  
+
     setIsLoading(true);
     setGeneratedGIFs([]); // GIF 생성 결과를 초기화
     setGeneratedImages([]); // 이미지 생성 결과를 초기화
-  
+
     const imageDTO = {
       message: purposeContent,
       concept: mood,
       base64Image: referenceImage,
     };
-  
-    try {
 
-      console.log("Base64 이미지 데이터:", referenceImage);
+    try {
+      console.log('Base64 이미지 데이터:', referenceImage);
 
       const response = await fetch('http://localhost:8080/api/createImage', {
         method: 'POST',
@@ -125,19 +143,19 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
         },
         body: JSON.stringify(imageDTO),
       });
-  
+
       if (!response.ok) {
         throw new Error('이미지 생성에 실패했습니다.');
       }
-  
+
       const data = await response.json();
-      const imageUrls = data.map(url => {
+      const imageUrls = data.map((url) => {
         const imageName = url.split('\\').pop();
         return `http://localhost:8080/api/images/${imageName}`;
       });
-  
+
       setGeneratedImages(imageUrls);
-      
+
       // 이미지가 있으면 첫 번째 이미지를 자동으로 선택
       if (imageUrls.length > 0) {
         setSelectedImage(imageUrls[0]);
@@ -148,22 +166,26 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
       setIsLoading(false);
     }
   };
-  
+
   const handleGenerateGIF = async () => {
+    if (!isSessionValid()) {
+      alert('세션이 유효하지 않습니다. 다시 로그인해주세요.');
+      return;
+    }
     if (gif !== '애니' && !purposeContent) {
       alert('문자 내용을 입력해 주세요.');
       return;
     }
-  
+
     if (gif === '애니' && (!subject || !action || !location)) {
       alert('피사체, 행동, 장소를 모두 입력해 주세요.');
       return;
     }
-  
+
     setIsLoading(true);
     setGeneratedImages([]); // 이미지 생성 결과를 초기화
     setGeneratedGIFs([]); // GIF 생성 결과를 초기화
-  
+
     const gifDTO = {
       category: gif,
       message: gif === '애니' ? '' : purposeContent,
@@ -173,7 +195,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
       where: gif === '애니' ? location : '',
       base64Image: referenceImage,
     };
-  
+
     try {
       const response = await fetch('http://localhost:8080/api/createGIF', {
         method: 'POST',
@@ -182,19 +204,15 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
         },
         body: JSON.stringify(gifDTO),
       });
-  
+
       if (!response.ok) {
         throw new Error('GIF 생성에 실패했습니다.');
       }
-  
+
       const data = await response.json();
-  
-      if (data && Array.isArray(data.imageUrl) && data.imageUrl[0]) {
-        const gifUrl = data.imageUrl[0];
-        setGeneratedGIFs([gifUrl]);
-        
-        // GIF가 있으면 첫 번째 GIF를 자동으로 선택
-        setSelectedImage(gifUrl);
+
+      if (data && Array.isArray(data.imageUrl)) {
+        setGeneratedGIFs(data.imageUrl); // 모든 GIF URL을 상태로 저장
       } else {
         alert('GIF 생성에 실패했습니다. 반환된 데이터가 올바르지 않습니다.');
       }
@@ -206,15 +224,23 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
   };
 
   const handleImageSelect = (image) => {
+    if (!isSessionValid()) {
+      alert('세션이 유효하지 않습니다. 다시 로그인해주세요.');
+      return;
+    }
     setSelectedImage(image);
   };
 
   const handleSend = async () => {
+    if (!isSessionValid()) {
+      alert('세션이 유효하지 않습니다. 다시 로그인해주세요.');
+      return;
+    }
     if (!purposeContent || !selectedImage) {
       alert('문자 내용과 이미지를 선택해주세요.');
       return;
     }
-  
+
     if (activeTab === 'gif') {
       // GIF 탭에서 선택한 경우 - URL 문자열 그대로 전송
       setAiMessage({ purposeContent, selectedImage }); // selectedImage는 URL 문자열 그대로
@@ -223,16 +249,19 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
       const imageFile = await urlToFile(selectedImage);
       setAiMessage({ purposeContent, selectedImage: imageFile });
     }
-  
+
     closePopup();
   };
-  
-  // 이미지 URL을 파일로 변환하는 함수
+
   const urlToFile = async (url) => {
-    const response = await fetch(url);  // URL에서 이미지 데이터를 가져옵니다
-    const blob = await response.blob();  // Blob으로 변환
-    const filename = url.split('/').pop();  // URL에서 파일 이름을 추출
-  
+    if (!isSessionValid()) {
+      alert('세션이 유효하지 않습니다. 다시 로그인해주세요.');
+      return null;
+    }
+    const response = await fetch(url); // URL에서 이미지 데이터를 가져옵니다
+    const blob = await response.blob(); // Blob으로 변환
+    const filename = url.split('/').pop(); // URL에서 파일 이름을 추출
+
     // Blob을 파일로 변환하여 반환
     return new File([blob], filename, { type: blob.type });
   };
@@ -321,15 +350,45 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
 
               </div>
 
-              {/* <div className="input-section">
-                <label>조직</label>
-                <select value={organization} onChange={(e) => setOrganization(e.target.value)}>
-                  <option value="">선택하세요</option>
-                  <option value="유치원">유치원</option>
-                  <option value="교회">교회</option>
-                  <option value="동호회">동호회</option>
-                </select>
-              </div> */}
+              <div className="input-section">
+              <label>조직</label>
+              <select
+                value={organization}
+                onChange={(e) => {
+                  if (e.target.value !== '기타') {
+                    setOrganization(e.target.value); // 기타가 아니면 선택된 값을 그대로 설정
+                    setOtherInfo(''); // 기타 입력 필드를 초기화
+                  } else {
+                    setOrganization('기타'); // 기타를 선택하면 organization을 기타로 설정
+                  }
+                }}
+              >
+                <option value="">선택하세요</option>
+                <option value="유치원">유치원</option>
+                <option value="교회">교회</option>
+                <option value="학교">학교</option>
+                <option value="의류 브랜드">의류 브랜드</option>
+                <option value="회사">회사</option>
+                <option value="기타">기타</option>
+              </select>
+            </div>
+
+            {/* "기타"를 선택했을 때만 활성화 */}
+            {organization === '기타' && (
+              <div className="input-section">
+                <label>기타</label>
+                <input
+                  type="text"
+                  value={otherInfo}
+                  onChange={(e) => {
+                    setOtherInfo(e.target.value); // otherInfo 업데이트
+                    setOrganization(e.target.value); // organization을 otherInfo 값으로 설정
+                  }}
+                  placeholder="원하는 조직을 입력하세요."
+                />
+              </div>
+            )}
+
 
               <div className="input-section">
                 <label>분위기</label>
@@ -345,15 +404,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                 </select>
               </div>
 
-              {/* <div className="input-section">
-                <label>기타</label>
-                <input
-                  type="text"
-                  value={otherInfo}
-                  onChange={(e) => setOtherInfo(e.target.value)}
-                  placeholder="기타 정보를 입력하세요."
-                />
-              </div> */}
+              
 
               <div className="input-section">
                 <label>저희가 참고할 이미지를 첨부해주세요 (선택)</label>

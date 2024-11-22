@@ -138,16 +138,20 @@ const handleAddRecipient = () => {
           'Content-Type': 'application/json',
         },
       });
-      
-      // 세션 스토리지에서 사용자 정보를 삭제
-      sessionStorage.removeItem('name'); // name으로 수정
-      setName(''); // 상태 업데이트
-
-      // 로그인 페이지로 리다이렉션 코드를 제거했습니다.
+  
+      // 세션 스토리지의 모든 정보 삭제
+      sessionStorage.clear();
+  
+      // 상태 초기화
+      setName(''); 
+  
+      // 로그인 페이지로 이동
+      navigate('/Login'); // 필요한 경우 리다이렉션 추가
     } catch (error) {
       console.error('로그아웃 중 오류 발생:', error);
     }
   };
+  
 
   // 수신번호 수정 함수
     const handleRecipientEdit = (index, newValue) => {
@@ -304,7 +308,7 @@ const handleAddRecipient = () => {
             value={recipientNumber}
             onChange={handleRecipientNumberChange} // 변경된 핸들러
           />
-          <button style={{justifyContent: 'flex-end'}} onClick={handleAddRecipient}>번호 추가</button>
+          <button style={{justifyContent: 'flex-end', marginRight:'15px'}} onClick={handleAddRecipient}>번호 추가</button>
           
           <br></br><br></br><br></br><br></br>
           <div>받는 사람</div>
@@ -317,12 +321,12 @@ const handleAddRecipient = () => {
                   type="text"
                   value={recipient}
                 />
-                <button onClick={() => handleRemoveRecipient(index)}>삭제</button>
+                <button style={{marginTop:'30px', marginRight:'30px'}} onClick={() => handleRemoveRecipient(index)}>삭제</button>
               </div>
             ))}
           </div>
 
-          <button onClick={handleSendMessage}>발송하기</button>
+          <button style={{marginRight:'15px'}} onClick={handleSendMessage}>발송하기</button>
         </div>
 
       </div>

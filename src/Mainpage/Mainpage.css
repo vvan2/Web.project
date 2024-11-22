@@ -294,16 +294,16 @@ button:hover {
 }
 
 .recipient-item button {
-  padding: 5px 10px;
-  background-color: #ff6b6b;
-  color: white;
-  border: none;
-  border-radius: 3px; /* 둥근 정도를 조금 줄임 */
-  cursor: pointer;
-  font-size: 12px;
-  margin-top: 25px;
+  padding: 5px 10px !important;
+  background-color: #ff6b6b !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 3px !important;
+  cursor: pointer !important;
+  font-size: 12px !important;
+  margin-top: 25px !important;
 }
 
 .recipient-item button:hover {
-  background-color: #e63946;
+  background-color: #e63946 !important;
 }
