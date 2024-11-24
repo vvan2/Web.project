@@ -243,11 +243,17 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
 
     if (activeTab === 'gif') {
       // GIF 탭에서 선택한 경우 - URL 문자열 그대로 전송
-      setAiMessage({ purposeContent, selectedImage }); // selectedImage는 URL 문자열 그대로
+      // const imagename = "C:/Users/USER/Desktop/precapImage/"+selectedImage.split('/').pop();
+      const imagename ="C:/Users/USER/Desktop/precapImage/"+selectedImage.split('/').pop();
+      setAiMessage({ purposeContent, selectedImage: null, imagename });
+      console.log(purposeContent, imagename)
     } else {
       // 이미지 탭에서 선택한 경우 - URL을 파일로 변환하여 전송
       const imageFile = await urlToFile(selectedImage);
-      setAiMessage({ purposeContent, selectedImage: imageFile });
+      // setAiMessage({ purposeContent, selectedImage: imageFile });
+      const imageName = "C:/Users/USER/Desktop/precapImage/"+selectedImage.split('/').pop();
+      setAiMessage({ purposeContent, selectedImage: imageFile, imageName });
+      console.log(purposeContent, selectedImage)
     }
 
     closePopup();
@@ -323,9 +329,11 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                   />
                 )}
               </div>
+              
               <button onClick={handleUseMessage} disabled={!generatedMessage}>
                 이 문자 사용하기
               </button>
+      
               <button onClick={() => { setAiMessage({ purposeContent: generatedMessage }); closePopup(); }}>
                 문자만 보낼래요
               </button>
@@ -382,34 +390,40 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                   value={otherInfo}
                   onChange={(e) => {
                     setOtherInfo(e.target.value); // otherInfo 업데이트
-                    setOrganization(e.target.value); // organization을 otherInfo 값으로 설정
+                    // setOrganization(e.target.value); // organization을 otherInfo 값으로 설정
                   }}
                   placeholder="원하는 조직을 입력하세요."
                 />
               </div>
             )}
 
-
               <div className="input-section">
-                <label>분위기</label>
-                <select value={mood} onChange={(e) => setMood(e.target.value)}>
-                  <option value="">선택하세요</option>
-                  <option value="세련된">세련된</option>
-                  <option value="따듯한">따듯한</option>
-                  <option value="극사실주의">극사실주의</option>
-                  <option value="복고풍">복고풍</option>
-                  <option value="차가운">차가운</option>
-                  <option value="무서운">무서운</option>
-                  <option value="귀여운">귀여운</option>
-                </select>
-              </div>
+                    <label>분위기</label>
+                    <select value={mood} onChange={(e) => setMood(e.target.value)}>
+                      <option value="">선택하세요</option>
+                      <option value="세련된">세련된</option>
+                      <option value="따듯한">따듯한</option>
+                      <option value="극사실주의">극사실주의</option>
+                      <option value="복고풍">복고풍</option>
+                      <option value="차가운">차가운</option>
+                      <option value="무서운">무서운</option>
+                      <option value="귀여운">귀여운</option>
+                      <option value="자연">자연</option>
+                      <option value="몽환적인">몽환적인</option>
+                      <option value="우긴">웃긴</option>
+                      <option value="동화같은">동화같은</option>
+                      <option value="팝아트">팝아트</option>
+                      <option value="일러스트">일러스트</option>
+                      <option value="만화">만화</option>
+                    </select>
+                  </div>
 
               
 
-              <div className="input-section">
+              {/* <div className="input-section">
                 <label>저희가 참고할 이미지를 첨부해주세요 (선택)</label>
                 <input type="file" onChange={handleFileChange} />
-              </div>
+              </div> */}
 
               <button onClick={handleGenerateImage} disabled={isLoading}>
                 {isLoading ? '이미지 생성 중...' : '이미지 생성하기'}
@@ -498,6 +512,45 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                   </div>
 
                   <div className="input-section">
+              <label>조직</label>
+              <select
+                value={organization}
+                onChange={(e) => {
+                  if (e.target.value !== '기타') {
+                    setOrganization(e.target.value); // 기타가 아니면 선택된 값을 그대로 설정
+                    setOtherInfo(''); // 기타 입력 필드를 초기화
+                  } else {
+                    setOrganization('기타'); // 기타를 선택하면 organization을 기타로 설정
+                  }
+                }}
+              >
+                <option value="">선택하세요</option>
+                <option value="유치원">유치원</option>
+                <option value="교회">교회</option>
+                <option value="학교">학교</option>
+                <option value="의류 브랜드">의류 브랜드</option>
+                <option value="회사">회사</option>
+                <option value="기타">기타</option>
+              </select>
+            </div>
+
+            {/* "기타"를 선택했을 때만 활성화 */}
+            {organization === '기타' && (
+              <div className="input-section">
+                <label>기타</label>
+                <input
+                  type="text"
+                  value={otherInfo}
+                  onChange={(e) => {
+                    setOtherInfo(e.target.value); // otherInfo 업데이트
+                    // setOrganization(e.target.value); // organization을 otherInfo 값으로 설정
+                  }}
+                  placeholder="원하는 조직을 입력하세요."
+                />
+              </div>
+            )}
+
+                  <div className="input-section">
                     <label>분위기</label>
                     <select value={mood} onChange={(e) => setMood(e.target.value)}>
                       <option value="">선택하세요</option>
@@ -508,6 +561,13 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                       <option value="차가운">차가운</option>
                       <option value="무서운">무서운</option>
                       <option value="귀여운">귀여운</option>
+                      <option value="자연">자연</option>
+                      <option value="몽환적인">몽환적인</option>
+                      <option value="우긴">웃긴</option>
+                      <option value="동화같은">동화같은</option>
+                      <option value="팝아트">팝아트</option>
+                      <option value="일러스트">일러스트</option>
+                      <option value="만화">만화</option>
                     </select>
                   </div>
                 </>
@@ -533,7 +593,8 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
               ) : (
                 <p>생성된 GIF가 없습니다.</p>
               )}
-              <button onClick={handleSend} disabled={!selectedImage || !purposeContent}>
+              {/* <button onClick={handleSend} disabled={!selectedImage || !purposeContent}> */}
+              <button onClick={() => { setAiMessage({ purposeContent: generatedMessage+"\n"+ "C:/Users/USER/Desktop/precapImage/"+selectedImage.split('/').pop()}); closePopup(); }}>
                 GIF와 문자 전송하기
               </button>
             </div>
