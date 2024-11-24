@@ -13,6 +13,8 @@ function MainPage() {
   const [recipients, setRecipients] = useState([]);
   const [image, setImage] = useState(null);
   const [imageURL, setImageURL] = useState(null);
+  const [imageName, setImageName] = useState(null); // 이미지 이름 상태 추가
+
 
   // 미리보기 선택 상태
   const [previewType, setPreviewType] = useState('문자'); // 기본값은 문자
@@ -50,6 +52,10 @@ function MainPage() {
     };
   }, []);
 
+  const isSessionValid = () => {
+    const username = sessionStorage.getItem('username');
+    return Boolean(username); // 세션이 유효하면 true 반환
+  };
 
   // 수신번호 입력 변경 핸들러 (숫자만 입력 가능)
 const handleRecipientNumberChange = (e) => {
@@ -77,34 +83,125 @@ const handleAddRecipient = () => {
 };
 
 
-  const setAiMessage = (aiMessage) => {
-    setMessageContent(aiMessage.purposeContent);
-    
-    if (typeof aiMessage.selectedImage === 'string') {
-      // URL 형태로 받은 이미지일 때 처리
-      setImageURL(aiMessage.selectedImage);
-      setImage(null); // 파일 객체 초기화
-    } else {
-      // 파일 객체일 때 처리
-      setImage(aiMessage.selectedImage);
-      setImageURL(null);
-    }
-    
-    closePopup();
-  };
+const setAiMessage = (aiMessage) => {
+  setMessageContent(aiMessage.purposeContent);
+
+  if (typeof aiMessage.selectedImage === 'string') {
+    setImageURL(aiMessage.selectedImage);
+    setImage(null);
+  } else {
+    setImage(aiMessage.selectedImage);
+    setImageURL(null);
+  }
+
+  // imageName을 상태로 설정
+  if (aiMessage.imageName) {
+    setImageName(aiMessage.imageName);
+  }
+
+  closePopup();
+};
 
 
+
+  // // 문자 발송 함수 (서버로 데이터 전송)
+  // const handleSendMessage = async () => {
+  //   try {
+  //     // 수신번호 배열이 비어 있는지 확인
+  //     if (recipients.length === 0) {
+  //       alert('수신번호를 하나 이상 추가해주세요.');
+  //       return;
+  //     }
+  
+  //     // 문자 내용 업데이트 (GIF URL 추가)
+  //     const updatedContent = imageURL
+  //       ? `${messageContent}\nGIF URL: ${imageURL}`
+  //       : messageContent;
+  
+  //     // Request Body 생성
+  //     const messageData = {
+  //       text: updatedContent,
+  //       img_path: image ? URL.createObjectURL(image) : "", // 이미지 파일 URL로 변환
+  //       phone_num: recipients, // 수신번호 배열
+  //     };
+  
+  //     // 디버그용 로그 추가
+  //     console.log('=== 발송 데이터 확인 ===');
+  //     console.log('문자 내용 (text):', messageData.text);
+  //     console.log('이미지 URL (img_path):', messageData.img_path);
+  //     console.log('수신번호 배열 (phone_num):', messageData.phone_num);
+  
+  //     // API 요청
+  //     const response = await fetch('http://localhost:8080/api/send', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(messageData),
+  //     });
+  
+  //     // 응답 처리
+  //     if (response.ok) {
+  //       alert('메시지가 성공적으로 발송되었습니다.');
+  //     } else {
+  //       const errorData = await response.json();
+  //       alert(`메시지 발송 실패: ${errorData.message || '알 수 없는 오류'}`);
+  //     }
+  //   } catch (error) {
+  //     console.error('메시지 발송 중 오류 발생:', error);
+  //     alert('메시지 발송 중 오류가 발생했습니다.');
+  //   }
+  // };
   // 문자 발송 함수 (서버로 데이터 전송)
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
+    if (!isSessionValid()) {
+      alert('세션이 유효하지 않습니다. 다시 로그인해주세요.');
+      return;
+    }
+    if (recipients.length === 0) {
+      alert('수신번호를 최소 하나 이상 추가해주세요.');
+      return;
+    }
+    if (!messageContent.trim()) {
+      alert('문자 내용을 입력해주세요.');
+      return;
+    }
+
+    setImageName([]); // 이미지 생성 결과를 초기화
+
+    const combinedMessage = messageContent + "\n" + (Array.isArray(imageName) ? '\n' + imageName.join(', ') : imageName || '');
+
     const messageData = {
-      title: messageTitle,
-      content: messageContent,
-      image: image,
-      recipients: recipients,
+      text: combinedMessage, // 문자 내용
+      img_path: imageName!==null?imageName:"", // 이미지 URL 또는 빈 문자열
+      phone_num: recipients, // 수신번호 배열
     };
-    console.log('메시지 데이터:', JSON.stringify(messageData));
-    // 여기에서 서버로 POST 요청을 보내는 코드를 추가합니다.
+    console.log('Final API Data:', messageData);
+
+    try {
+      // API 요청 전송
+      const response = await fetch('http://localhost:8080/api/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(messageData),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('문자 발송 성공:', result);
+        alert('문자가 성공적으로 발송되었습니다!');
+      } else {
+        console.error('문자 발송 실패:', response.statusText);
+        alert('문자 발송에 실패했습니다.');
+      }
+    } catch (error) {
+      console.error('문자 발송 중 오류 발생:', error);
+      alert('문자 발송 중 오류가 발생했습니다.');
+    }
   };
+  
 
   // 이미지 추가 함수 (추후 파일 업로드 로직 추가 가능)
   const handleImageUpload = (e) => {
