@@ -37,7 +37,7 @@ function MypageStorage() {
   const handleLogout = async () => {
     try {
       // 로그아웃 API 호출 (예: POST 요청)
-      await fetch('http://localhost:8080/api/logout', {
+      await fetch('http://13.239.36.154:8080/api/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

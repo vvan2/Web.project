@@ -49,7 +49,7 @@ const Join = () => {
 
     // 회원가입 API 호출
     try {
-      const response = await fetch('http://localhost:8080/api/joinProc', {
+      const response = await fetch('http://13.239.36.154:8080/api/joinProc', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

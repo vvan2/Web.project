@@ -62,7 +62,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
 
     try {
       // API 요청
-      const response = await fetch('http://localhost:8080/api/generate-message', {
+      const response = await fetch('http://13.239.36.154:8080/api/generate-message', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -136,7 +136,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
     try {
       console.log('Base64 이미지 데이터:', referenceImage);
 
-      const response = await fetch('http://localhost:8080/api/createImage', {
+      const response = await fetch('http://13.239.36.154:8080/api/createImage', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -150,8 +150,8 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
 
       const data = await response.json();
       const imageUrls = data.map((url) => {
-        const imageName = url.split('\\').pop();
-        return `http://localhost:8080/api/images/${imageName}`;
+        const imageName = url.split('/').pop();
+        return `http://13.239.36.154:8080/api/images/${imageName}`;
       });
 
       setGeneratedImages(imageUrls);
@@ -197,7 +197,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
     };
 
     try {
-      const response = await fetch('http://localhost:8080/api/createGIF', {
+      const response = await fetch('http://13.239.36.154:8080/api/createGIF', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -244,14 +244,14 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
     if (activeTab === 'gif') {
       // GIF 탭에서 선택한 경우 - URL 문자열 그대로 전송
       // const imagename = "C:/Users/USER/Desktop/precapImage/"+selectedImage.split('/').pop();
-      const imagename ="C:/Users/USER/Desktop/precapImage/"+selectedImage.split('/').pop();
+      const imagename ="/home/ec2-user/app/"+selectedImage.split('/').pop();
       setAiMessage({ purposeContent, selectedImage: null, imagename });
       console.log(purposeContent, imagename)
     } else {
       // 이미지 탭에서 선택한 경우 - URL을 파일로 변환하여 전송
       const imageFile = await urlToFile(selectedImage);
       // setAiMessage({ purposeContent, selectedImage: imageFile });
-      const imageName = "C:/Users/USER/Desktop/precapImage/"+selectedImage.split('/').pop();
+      const imageName = "/home/ec2-user/app/"+selectedImage.split('/').pop();
       setAiMessage({ purposeContent, selectedImage: imageFile, imageName });
       console.log(purposeContent, selectedImage)
     }
@@ -410,7 +410,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                       <option value="귀여운">귀여운</option>
                       <option value="자연">자연</option>
                       <option value="몽환적인">몽환적인</option>
-                      <option value="우긴">웃긴</option>
+                      <option value="웃긴">웃긴</option>
                       <option value="동화같은">동화같은</option>
                       <option value="팝아트">팝아트</option>
                       <option value="일러스트">일러스트</option>
@@ -563,7 +563,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                       <option value="귀여운">귀여운</option>
                       <option value="자연">자연</option>
                       <option value="몽환적인">몽환적인</option>
-                      <option value="우긴">웃긴</option>
+                      <option value="웃긴">웃긴</option>
                       <option value="동화같은">동화같은</option>
                       <option value="팝아트">팝아트</option>
                       <option value="일러스트">일러스트</option>
@@ -594,7 +594,7 @@ function AiMessagePopup({ closePopup, setAiMessage }) {
                 <p>생성된 GIF가 없습니다.</p>
               )}
               {/* <button onClick={handleSend} disabled={!selectedImage || !purposeContent}> */}
-              <button onClick={() => { setAiMessage({ purposeContent: generatedMessage+"\n"+ "C:/Users/USER/Desktop/precapImage/"+selectedImage.split('/').pop()}); closePopup(); }}>
+              <button onClick={() => { setAiMessage({ purposeContent: generatedMessage+"\n"+ "http://13.239.36.154:8080/app/"+selectedImage.split('/').pop()}); closePopup(); }}>
                 GIF와 문자 전송하기
               </button>
             </div>

@@ -176,11 +176,13 @@ const setAiMessage = (aiMessage) => {
       img_path: imageName!==null?imageName:"", // 이미지 URL 또는 빈 문자열
       phone_num: recipients, // 수신번호 배열
     };
+
+    
     console.log('Final API Data:', messageData);
 
     try {
       // API 요청 전송
-      const response = await fetch('http://localhost:8080/api/send', {
+      const response = await fetch('http://13.239.36.154:8080/api/send', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -229,7 +231,7 @@ const setAiMessage = (aiMessage) => {
   const handleLogout = async () => {
     try {
       // 로그아웃 API 호출 (예: POST 요청)
-      await fetch('http://localhost:8080/api/logout', {
+      await fetch('http://13.239.36.154:8080/api/logout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
